@@ -29,6 +29,18 @@ public class Place {
     @ColumnInfo(name = "description")
     private String mWeatherDescription;
 
+    public Place(@NonNull String mCityId,
+                 @NonNull String mCityName,
+                 @NonNull String mCountry,
+                 @NonNull String mTemperature,
+                 @NonNull String mWeatherDescription) {
+        this.mCityId = mCityId;
+        this.mCityName = mCityName;
+        this.mCountry = mCountry;
+        this.mTemperature = mTemperature;
+        this.mWeatherDescription = mWeatherDescription;
+    }
+
     public String getCityId() {
         return mCityId;
     }

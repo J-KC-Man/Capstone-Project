@@ -12,7 +12,7 @@ import android.support.annotation.NonNull;
 import com.jman.capstone_project.database.dao.PlaceDao;
 import com.jman.capstone_project.database.entities.Place;
 
-@Database(entities = {Place.class}, version = 1)
+@Database(entities = {Place.class}, version = 1, exportSchema = false)
 public abstract class PlacesRoomDatabase extends RoomDatabase {
 
     // Define the DAOs that work with the database

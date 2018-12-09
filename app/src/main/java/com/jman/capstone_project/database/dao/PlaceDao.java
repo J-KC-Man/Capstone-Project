@@ -23,7 +23,7 @@ public interface PlaceDao {
 
     //todo: add a delete statement to delete one record
 
-    @Query("SELECT city_name from places_table")
+    @Query("SELECT * from places_table")
     LiveData<List<Place>> getAllPlaces();
 
     // get one place by city id
