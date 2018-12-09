@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
+
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView
         .OnNavigationItemSelectedListener {
@@ -42,6 +44,10 @@ public class MainActivity extends AppCompatActivity
        // mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
+
+        // init asynctask object and make the MainActivity the callback calling object
+        //new EndpointAsyncTask(this).execute(this);
+        new EndpointAsyncTask().execute("London, UK");
 
         loadFragment(new WeatherFragment());
     }
