@@ -1,0 +1,72 @@
+package com.jman.capstone_project.database;
+
+
+import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.room.Database;
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+
+import com.jman.capstone_project.database.dao.PlaceDao;
+import com.jman.capstone_project.database.entities.Place;
+
+@Database(entities = {Place.class}, version = 1)
+public abstract class PlacesRoomDatabase extends RoomDatabase {
+
+    // Define the DAOs that work with the database
+    public abstract PlaceDao placeDao();
+
+    //volatile keyword is used to mark a Java variable as "being stored in main memory"
+    // guarantees visibility of changes to variables across threads
+    private static volatile PlacesRoomDatabase INSTANCE;
+
+//    /*
+//    * To delete all content and repopulate the database whenever the app is started,
+//    * you create a RoomDatabase.Callback and override onOpen().
+//    * */
+//    private static RoomDatabase.Callback sRoomDatabaseCallback =
+//            new RoomDatabase.Callback(){
+//
+//                @Override
+//                public void onOpen (@NonNull SupportSQLiteDatabase db){
+//                    super.onOpen(db);
+//                   // new PopulateDbAsync(INSTANCE).execute();
+//                }
+//            };
+
+    // Implements Singleton to only ever get one instance of the DB
+    public static PlacesRoomDatabase getDatabase(final Context context) {
+        if (INSTANCE == null) {
+            synchronized (PlacesRoomDatabase.class) {
+                if (INSTANCE == null) {
+                    // Create database
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                            PlacesRoomDatabase.class, "places_database")
+                            .build();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
+//    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
+//
+//        private final PlaceDao mDao;
+//
+//        PopulateDbAsync(PlacesRoomDatabase db) {
+//            mDao = db.placeDao();
+//        }
+//
+//        @Override
+//        protected Void doInBackground(final Void... params) {
+//            mDao.deleteAll();
+//            Word word = new Word("Hello");
+//            mDao.insert(word);
+//            word = new Word("World");
+//            mDao.insert(word);
+//            return null;
+//        }
+//    }
+}

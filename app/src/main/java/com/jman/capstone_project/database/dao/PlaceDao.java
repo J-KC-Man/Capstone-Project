@@ -21,10 +21,14 @@ public interface PlaceDao {
     @Query("Delete FROM places_table")
     void deleteAll();
 
-    @Query("SELECT * from places_table")
-    LiveData<List<Place>> getAllWords();
+    //todo: add a delete statement to delete one record
+
+    @Query("SELECT city_name from places_table")
+    LiveData<List<Place>> getAllPlaces();
 
     // get one place by city id
+    @Query("SELECT * from places_table WHERE city_id=:cityId")
+    LiveData<Place> findPlaceById(String cityId);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updatePlace(Place place);
