@@ -3,6 +3,7 @@ package com.jman.capstone_project.remoteDataSource;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
+import com.jman.capstone_project.BuildConfig;
 import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
 
 import org.json.JSONException;
@@ -29,7 +30,7 @@ public class EndpointAsyncTask extends AsyncTask<String,String, String> {
 
     // this needs to be put into the strings file
     String BASE_URL = "https://api.openweathermap.org/data/2.5/weather?q=";
-    String API_KEY = "4f3242cb0848b512beb7a61091a6959c";
+    String API_KEY = BuildConfig.ApiKey;
 
     private IAsyncTaskCallback asyncTaskCallback;
 

@@ -22,19 +22,19 @@ public abstract class PlacesRoomDatabase extends RoomDatabase {
     // guarantees visibility of changes to variables across threads
     private static volatile PlacesRoomDatabase INSTANCE;
 
-//    /*
-//    * To delete all content and repopulate the database whenever the app is started,
-//    * you create a RoomDatabase.Callback and override onOpen().
-//    * */
-//    private static RoomDatabase.Callback sRoomDatabaseCallback =
-//            new RoomDatabase.Callback(){
-//
-//                @Override
-//                public void onOpen (@NonNull SupportSQLiteDatabase db){
-//                    super.onOpen(db);
-//                   // new PopulateDbAsync(INSTANCE).execute();
-//                }
-//            };
+    /*
+    * To delete all content and repopulate the database whenever the app is started,
+    * you create a RoomDatabase.Callback and override onOpen().
+    * */
+    private static RoomDatabase.Callback sRoomDatabaseCallback =
+            new RoomDatabase.Callback(){
+
+                @Override
+                public void onOpen (@NonNull SupportSQLiteDatabase db){
+                    super.onOpen(db);
+                    new PopulateDbAsync(INSTANCE).execute();
+                }
+            };
 
     // Implements Singleton to only ever get one instance of the DB
     public static PlacesRoomDatabase getDatabase(final Context context) {
@@ -44,6 +44,7 @@ public abstract class PlacesRoomDatabase extends RoomDatabase {
                     // Create database
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             PlacesRoomDatabase.class, "places_database")
+                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
@@ -51,22 +52,24 @@ public abstract class PlacesRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-//    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
-//
-//        private final PlaceDao mDao;
-//
-//        PopulateDbAsync(PlacesRoomDatabase db) {
-//            mDao = db.placeDao();
-//        }
-//
-//        @Override
-//        protected Void doInBackground(final Void... params) {
-//            mDao.deleteAll();
-//            Word word = new Word("Hello");
-//            mDao.insert(word);
-//            word = new Word("World");
-//            mDao.insert(word);
-//            return null;
-//        }
-//    }
+    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
+
+        private final PlaceDao mDao;
+
+        PopulateDbAsync(PlacesRoomDatabase db) {
+            mDao = db.placeDao();
+        }
+
+        @Override
+        protected Void doInBackground(final Void... params) {
+            mDao.deleteAll();
+            Place place = new Place("2643743",
+                    "London",
+                    "GB","283.69",
+                    "overcast clouds");
+            mDao.insert(place);
+
+            return null;
+        }
+    }
 }

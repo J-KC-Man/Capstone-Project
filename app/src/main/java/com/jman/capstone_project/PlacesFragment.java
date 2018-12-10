@@ -1,7 +1,10 @@
 package com.jman.capstone_project;
 
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jman.capstone_project.adapters.PlaceListAdapter;
+import com.jman.capstone_project.database.entities.Place;
+import com.jman.capstone_project.viewmodel.PlacesViewModel;
+
+import java.util.List;
 
 
 /**
@@ -17,10 +24,11 @@ import com.jman.capstone_project.adapters.PlaceListAdapter;
  */
 public class PlacesFragment extends Fragment {
 
+    private PlacesViewModel mPlacesViewModel;
+
     public PlacesFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,6 +46,16 @@ public class PlacesFragment extends Fragment {
 
         // attach recyclerView and adapter
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mPlacesViewModel = ViewModelProviders.of(this).get(PlacesViewModel.class);
+
+        mPlacesViewModel.getAllWords().observe(this, new Observer<List<Place>>() {
+            @Override
+            public void onChanged(@Nullable final List<Place> places) {
+                // Update the cached copy of the places in the adapter.
+                mAdapter.setPlaces(places);
+            }
+        });
 
 
         return rootView;
