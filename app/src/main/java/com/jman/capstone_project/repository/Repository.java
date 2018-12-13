@@ -7,13 +7,21 @@ import android.os.AsyncTask;
 import com.jman.capstone_project.database.PlacesRoomDatabase;
 import com.jman.capstone_project.database.dao.PlaceDao;
 import com.jman.capstone_project.database.entities.Place;
+import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
+import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
+import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
 
 import java.util.List;
 
-public class Repository {
+public class Repository implements IAsyncTaskCallback {
 
     private PlaceDao mPlaceDao;
     private LiveData<List<Place>> mAllPlaces;
+    private WeatherInfoModel weatherInfoModel;
+
+    public WeatherInfoModel getWeatherInfoModel() {
+        return weatherInfoModel;
+    }
 
     public Repository(Application application) {
         // initialise db instance - the only instance in the app
@@ -48,4 +56,12 @@ public class Repository {
         }
     }
 
+    public void getWeatherForCity() {
+        //new EndpointAsyncTask(this).execute("London, UK");
+    }
+
+    @Override
+    public void onResultReceived(WeatherInfoModel weatherInfoModel) {
+        this.weatherInfoModel = weatherInfoModel;
+    }
 }

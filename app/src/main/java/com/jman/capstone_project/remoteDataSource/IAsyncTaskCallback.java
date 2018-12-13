@@ -1,5 +1,7 @@
 package com.jman.capstone_project.remoteDataSource;
 
+import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
+
 /*
  * This class acts as an interface between the AsyncTask and The UI.
  * onResultReceived is called at onPostExecute to tell the callback object that the AsyncTask
@@ -8,5 +10,5 @@ package com.jman.capstone_project.remoteDataSource;
  * */
 public interface IAsyncTaskCallback {
 
-    void onResultReceived(String result);
+    void onResultReceived(WeatherInfoModel weatherInfoModel);
 }

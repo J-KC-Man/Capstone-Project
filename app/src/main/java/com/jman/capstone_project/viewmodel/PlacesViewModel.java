@@ -26,12 +26,6 @@ public class PlacesViewModel extends AndroidViewModel {
     }
 
     // A "getter" method for all the places. This completely hides the implementation from the UI
-    public LiveData<List<Place>> getAllWords() { return mAllPlaces; }
+    public LiveData<List<Place>> getAllPlaces() { return mAllPlaces; }
 
-    // todo: I may need to move the insert method into another viewmodel called WeatherViewModel
-    /*
-     * Create a wrapper insert() method that calls the Repository's insert() method.
-     * In this way, the implementation of insert() is completely hidden from the UI
-     * */
-    public void insert(Place place) { mRepository.insert(place); }
 }

@@ -1,18 +1,32 @@
 package com.jman.capstone_project;
 
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
+import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
+import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
+import com.jman.capstone_project.repository.Repository;
+import com.jman.capstone_project.viewmodel.WeatherViewModel;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends Fragment implements IAsyncTaskCallback {
 
+    private WeatherViewModel weatherViewModel;
+    private WeatherInfoModel weatherInfoModel;
+
+    TextView cityNameTextView;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -23,7 +37,40 @@ public class WeatherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weather, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_weather, container, false);
+
+        // Use ViewModelProviders to associate the ViewModel with the UI controller
+        // this is the fragment, it serves as a view controller
+        // When the activity is destroyed, for example through a configuration change, the ViewModel persists.
+        // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
+        //weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+
+        //weatherInfoModel = weatherViewModel.getWeatherInfoModel();
+
+
+
+        cityNameTextView = rootView.findViewById(R.id.city_name_textView);
+
+        //bindData();
+
+        return rootView;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        new EndpointAsyncTask(this).execute("London, UK");
+    }
+
+    public void bindData() {
+        if (this.weatherInfoModel != null) {
+            cityNameTextView.setText(this.weatherInfoModel.getName());
+        }
+    }
+
+    @Override
+    public void onResultReceived(WeatherInfoModel weatherInfoModel) {
+        this.weatherInfoModel = weatherInfoModel;
+        bindData();
+    }
 }

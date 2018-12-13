@@ -9,10 +9,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
+import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
+import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
 
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView
-        .OnNavigationItemSelectedListener {
+        .OnNavigationItemSelectedListener, IAsyncTaskCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +28,14 @@ public class MainActivity extends AppCompatActivity
         navigation.setSelectedItemId(R.id.navigation_home);
 
         // init asynctask object and make the MainActivity the callback calling object
-        //new EndpointAsyncTask(this).execute(this);
-        new EndpointAsyncTask().execute("London, UK");
+        //new EndpointAsyncTask(this).execute("London, UK");
 
         loadFragment(new WeatherFragment());
+    }
+
+    @Override
+    public void onResultReceived(WeatherInfoModel weatherInfoModel) {
+        WeatherInfoModel weatherInfoModel1 = weatherInfoModel;
     }
 
     private boolean loadFragment(Fragment fragment) {
@@ -67,4 +73,6 @@ public class MainActivity extends AppCompatActivity
 
         return loadFragment(fragment);
     }
+
+
 }

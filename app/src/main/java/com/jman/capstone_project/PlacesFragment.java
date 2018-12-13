@@ -49,7 +49,7 @@ public class PlacesFragment extends Fragment {
 
         mPlacesViewModel = ViewModelProviders.of(this).get(PlacesViewModel.class);
 
-        mPlacesViewModel.getAllWords().observe(this, new Observer<List<Place>>() {
+        mPlacesViewModel.getAllPlaces().observe(this, new Observer<List<Place>>() {
             @Override
             public void onChanged(@Nullable final List<Place> places) {
                 // Update the cached copy of the places in the adapter.
