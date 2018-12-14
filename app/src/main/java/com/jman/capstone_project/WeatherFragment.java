@@ -21,12 +21,13 @@ import com.jman.capstone_project.viewmodel.WeatherViewModel;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WeatherFragment extends Fragment implements IAsyncTaskCallback {
+public class WeatherFragment extends Fragment {
 
     private WeatherViewModel weatherViewModel;
     private WeatherInfoModel weatherInfoModel;
 
     TextView cityNameTextView;
+    TextView temperatureTextView;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -43,15 +44,12 @@ public class WeatherFragment extends Fragment implements IAsyncTaskCallback {
         // this is the fragment, it serves as a view controller
         // When the activity is destroyed, for example through a configuration change, the ViewModel persists.
         // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
-        //weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
-
-        //weatherInfoModel = weatherViewModel.getWeatherInfoModel();
-
-
+        weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
 
         cityNameTextView = rootView.findViewById(R.id.city_name_textView);
+        temperatureTextView = rootView.findViewById(R.id.temperature_textView);
 
-        //bindData();
+
 
         return rootView;
     }
@@ -59,18 +57,23 @@ public class WeatherFragment extends Fragment implements IAsyncTaskCallback {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        new EndpointAsyncTask(this).execute("London, UK");
+       // new EndpointAsyncTask(this).execute("London, UK");
+       // weatherInfoModel = weatherViewModel.getWeatherInfoModel();
+        weatherViewModel.makeApiCall();
+        weatherInfoModel = weatherViewModel.getWeatherInfoModel();
+        bindData();
     }
 
     public void bindData() {
         if (this.weatherInfoModel != null) {
             cityNameTextView.setText(this.weatherInfoModel.getName());
+            temperatureTextView.setText(this.weatherInfoModel.getMain().getTemp());
         }
     }
 
-    @Override
-    public void onResultReceived(WeatherInfoModel weatherInfoModel) {
-        this.weatherInfoModel = weatherInfoModel;
-        bindData();
-    }
+//    @Override
+//    public void onResultReceived(WeatherInfoModel weatherInfoModel) {
+//       // this.weatherInfoModel = weatherInfoModel;
+//        //bindData();
+//    }
 }

@@ -21,7 +21,7 @@ public class PlacesViewModel extends AndroidViewModel {
     public PlacesViewModel(@NonNull Application application) {
         super(application);
         // add reference to repository
-        mRepository = new Repository(application);
+        mRepository = new Repository(application, null);
         mAllPlaces = mRepository.getmAllPlaces();
     }
 

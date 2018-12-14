@@ -14,7 +14,7 @@ import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
 
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView
-        .OnNavigationItemSelectedListener, IAsyncTaskCallback {
+        .OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +31,6 @@ public class MainActivity extends AppCompatActivity
         //new EndpointAsyncTask(this).execute("London, UK");
 
         loadFragment(new WeatherFragment());
-    }
-
-    @Override
-    public void onResultReceived(WeatherInfoModel weatherInfoModel) {
-        WeatherInfoModel weatherInfoModel1 = weatherInfoModel;
     }
 
     private boolean loadFragment(Fragment fragment) {

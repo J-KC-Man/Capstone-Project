@@ -10,6 +10,7 @@ import com.jman.capstone_project.database.entities.Place;
 import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
 import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
 import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
+import com.jman.capstone_project.viewmodel.IViewModelCallback;
 
 import java.util.List;
 
@@ -19,13 +20,17 @@ public class Repository implements IAsyncTaskCallback {
     private LiveData<List<Place>> mAllPlaces;
     private WeatherInfoModel weatherInfoModel;
 
+    IViewModelCallback iViewModelCallback;
+
     public WeatherInfoModel getWeatherInfoModel() {
-        return weatherInfoModel;
+        return this.weatherInfoModel;
     }
 
-    public Repository(Application application) {
+    public Repository(Application application, IViewModelCallback iViewModelCallback) {
         // initialise db instance - the only instance in the app
         PlacesRoomDatabase db = PlacesRoomDatabase.getDatabase(application);
+
+        this.iViewModelCallback = iViewModelCallback;
 
         // init dao
         mPlaceDao = db.placeDao();
@@ -57,11 +62,16 @@ public class Repository implements IAsyncTaskCallback {
     }
 
     public void getWeatherForCity() {
-        //new EndpointAsyncTask(this).execute("London, UK");
+        new EndpointAsyncTask(this).execute("London, UK");
     }
 
     @Override
     public void onResultReceived(WeatherInfoModel weatherInfoModel) {
-        this.weatherInfoModel = weatherInfoModel;
+       // this.weatherInfoModel = weatherInfoModel;
+        iViewModelCallback.passToViewModel(weatherInfoModel);
+        // pass to viewmodel by interface method?
+        // passtovm(weatherInfoModel)
+       // return this.weatherInfoModel;
     }
+
 }
