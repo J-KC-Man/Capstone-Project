@@ -34,9 +34,9 @@ public class EndpointAsyncTask extends AsyncTask<String,String, String> {
 
     private IAsyncTaskCallback asyncTaskCallback;
 
-//    public EndpointAsyncTask(IAsyncTaskCallback asyncTaskCallback) {
-//        this.asyncTaskCallback = asyncTaskCallback;
-//    }
+    public EndpointAsyncTask(IAsyncTaskCallback asyncTaskCallback) {
+        this.asyncTaskCallback = asyncTaskCallback;
+    }
 
     @Override
     protected String doInBackground(String... strings) {
@@ -67,7 +67,9 @@ public class EndpointAsyncTask extends AsyncTask<String,String, String> {
 
                 // this hold all the response
                 topLevel = new JSONObject(builder.toString());
-            } else {
+            }
+            // call is not a 200 response code
+            else {
                 result = "Call was not successful";
                 return result;
             }
@@ -93,6 +95,7 @@ public class EndpointAsyncTask extends AsyncTask<String,String, String> {
         Gson gson = new Gson();
         WeatherInfoModel weatherInfoModel = gson.fromJson(result, WeatherInfoModel.class);
         // might need to pass this to a repository class later which implements interface
-        // asyncTaskCallback.onResultReceived(result);
+
+        asyncTaskCallback.onResultReceived(weatherInfoModel);
     }
 }

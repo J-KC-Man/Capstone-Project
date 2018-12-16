@@ -12,7 +12,8 @@ import android.support.annotation.NonNull;
 import com.jman.capstone_project.database.dao.PlaceDao;
 import com.jman.capstone_project.database.entities.Place;
 
-@Database(entities = {Place.class}, version = 1, exportSchema = false)
+
+@Database(entities = {Place.class}, version = 3, exportSchema = false)
 public abstract class PlacesRoomDatabase extends RoomDatabase {
 
     // Define the DAOs that work with the database
@@ -32,6 +33,8 @@ public abstract class PlacesRoomDatabase extends RoomDatabase {
                 @Override
                 public void onOpen (@NonNull SupportSQLiteDatabase db){
                     super.onOpen(db);
+
+                    // TODO: remove this line eventually
                     new PopulateDbAsync(INSTANCE).execute();
                 }
             };
@@ -45,6 +48,7 @@ public abstract class PlacesRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             PlacesRoomDatabase.class, "places_database")
                             .addCallback(sRoomDatabaseCallback)
+                            //.fallbackToDestructiveMigration() // only needed in db migrations
                             .build();
                 }
             }
@@ -63,9 +67,11 @@ public abstract class PlacesRoomDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params) {
             mDao.deleteAll();
+
             Place place = new Place("2643743",
                     "London",
-                    "GB","283.69",
+                    "GB",
+                    "283.69",
                     "overcast clouds");
             mDao.insert(place);
 

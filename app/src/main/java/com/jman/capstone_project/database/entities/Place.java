@@ -29,6 +29,7 @@ public class Place {
     @ColumnInfo(name = "description")
     private String mWeatherDescription;
 
+
     public Place(@NonNull String mCityId,
                  @NonNull String mCityName,
                  @NonNull String mCountry,
@@ -53,9 +54,11 @@ public class Place {
         return mCountry;
     }
 
+
     public String getTemperature() {
         return mTemperature;
     }
+
 
     public String getWeatherDescription() {
         return mWeatherDescription;

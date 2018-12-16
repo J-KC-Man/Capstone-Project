@@ -18,6 +18,8 @@ public class PlacesViewModel extends AndroidViewModel {
     // Add a private LiveData member variable to cache the list of places
     private LiveData<List<Place>> mAllPlaces;
 
+
+
     public PlacesViewModel(@NonNull Application application) {
         super(application);
         // add reference to repository
@@ -26,12 +28,16 @@ public class PlacesViewModel extends AndroidViewModel {
     }
 
     // A "getter" method for all the places. This completely hides the implementation from the UI
-    public LiveData<List<Place>> getAllWords() { return mAllPlaces; }
+    public LiveData<List<Place>> getAllPlaces() { return mAllPlaces; }
 
-    // todo: I may need to move the insert method into another viewmodel called WeatherViewModel
-    /*
-     * Create a wrapper insert() method that calls the Repository's insert() method.
-     * In this way, the implementation of insert() is completely hidden from the UI
-     * */
-    public void insert(Place place) { mRepository.insert(place); }
+//    /*
+//    * Get default weather for place
+//    * */
+//    public LiveData<Place> getWeather() {
+//        this.weather = mRepository.getWeather();
+//        // this.weather = mRepository.getWeather("2643743");
+//        return this.weather;
+//    }
+
+
 }
