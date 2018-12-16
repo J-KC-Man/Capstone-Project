@@ -27,6 +27,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
     private final LayoutInflater mInflater;
     private List<Place> mPlaces; // Cached copy of places
 
+
     public PlaceListAdapter(Context context) {
 
         // mInflater is initialised here to avoid declaring a new Context field
@@ -55,6 +56,11 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
      * Updates list of words from db
      *
      **/
+//    public void setPlaces(List<Place> places){
+//        mPlaces = places;
+//        notifyDataSetChanged();
+//    }
+
     public void setPlaces(List<Place> places){
         mPlaces = places;
         notifyDataSetChanged();

@@ -15,13 +15,16 @@ import java.util.List;
 @Dao
 public interface PlaceDao {
 
+    @Query("SELECT * from places_table LIMIT 1")
+    LiveData<Place> getDefaultPlace();
+
     @Insert
     void insert(Place place);
 
     @Query("Delete FROM places_table")
     void deleteAll();
 
-    @Query("DELETE FROM weather_table WHERE city_id=:cityId ")
+    @Query("DELETE FROM places_table WHERE city_id=:cityId ")
     void deletePlace(String cityId);
 
     @Query("SELECT * from places_table")
@@ -29,8 +32,9 @@ public interface PlaceDao {
 
     // get one place by city id
     @Query("SELECT * from places_table WHERE city_id=:cityId")
-    LiveData<Place> findPlaceById(String cityId);
+    LiveData<Place> findPlaceByCityId(String cityId);
 
+    // for updating weather - you need to get the right place to update before calling this method
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updatePlace(Place place);
 

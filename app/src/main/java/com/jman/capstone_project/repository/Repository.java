@@ -2,18 +2,20 @@ package com.jman.capstone_project.repository;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
+
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 import com.jman.capstone_project.BuildConfig;
 import com.jman.capstone_project.database.PlacesRoomDatabase;
 import com.jman.capstone_project.database.dao.PlaceDao;
+
 import com.jman.capstone_project.database.entities.Place;
-import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
+
+
 import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
 import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
-import com.jman.capstone_project.viewmodel.IViewModelCallback;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,32 +30,36 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 
-public class Repository implements IAsyncTaskCallback {
+public class Repository {
 
     private PlaceDao mPlaceDao;
     private LiveData<List<Place>> mAllPlaces;
-    MutableLiveData<WeatherInfoModel> weatherInfoModelLiveData = new MutableLiveData<>();;
+    private LiveData<Place> mWeatherInfo;
 
-    IViewModelCallback iViewModelCallback; // look at removing this
 
-    public LiveData<WeatherInfoModel> getWeatherInfoModelLiveData() {
-        return this.weatherInfoModelLiveData;
-    }
-
-    public Repository(Application application, IViewModelCallback iViewModelCallback) {
+    public Repository(Application application) {
         // initialise db instance - the only instance in the app
         PlacesRoomDatabase db = PlacesRoomDatabase.getDatabase(application);
-
-        this.iViewModelCallback = iViewModelCallback;
 
         // init dao
         mPlaceDao = db.placeDao();
         mAllPlaces = mPlaceDao.getAllPlaces();
+
+    }
+
+    /*
+    * Get default weather
+    * */
+    public LiveData<Place> getWeather() {
+        this.mWeatherInfo = mPlaceDao.getDefaultPlace();
+
+        return this.mWeatherInfo;
     }
 
     public LiveData<List<Place>> getmAllPlaces() {
         return mAllPlaces;
     }
+
 
     public void insert (Place place) {
         new insertAsyncTask(mPlaceDao).execute(place);
@@ -76,17 +82,10 @@ public class Repository implements IAsyncTaskCallback {
     }
 
     public void getWeatherForCity() {
-        new WeatherEndpointAsyncTask(this).execute("London, UK");
+       // new WeatherEndpointAsyncTask().execute("London, UK");
     }
 
-    @Override
-    public void onResultReceived(WeatherInfoModel weatherInfoModel) {
-       // this.weatherInfoModel = weatherInfoModel;
-        iViewModelCallback.passToViewModel(weatherInfoModel);
-        // pass to viewmodel by interface method?
-        // passtovm(weatherInfoModel)
-       // return this.weatherInfoModel;
-    }
+
 
     /**
      * Web client to interface with the API endpoint
@@ -167,7 +166,7 @@ public class Repository implements IAsyncTaskCallback {
             //asyncTaskCallback.onResultReceived(weatherInfoModel);
 
             // put it in LiveData use postValue to post a task to main thread to set the value
-            weatherInfoModelLiveData.postValue(weatherInfoModel);
+           // weatherInfoModelLiveData.postValue(weatherInfoModel);
         }
     }
 

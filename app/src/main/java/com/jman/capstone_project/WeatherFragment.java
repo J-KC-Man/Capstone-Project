@@ -1,8 +1,8 @@
 package com.jman.capstone_project;
 
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,11 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
-import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
-import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
-import com.jman.capstone_project.repository.Repository;
-import com.jman.capstone_project.viewmodel.WeatherViewModel;
+import com.jman.capstone_project.database.entities.Place;
+import com.jman.capstone_project.viewmodel.PlacesViewModel;
+
+import java.util.List;
 
 
 /**
@@ -23,11 +22,11 @@ import com.jman.capstone_project.viewmodel.WeatherViewModel;
  */
 public class WeatherFragment extends Fragment {
 
-    private WeatherViewModel weatherViewModel;
-    private WeatherInfoModel weatherInfoModel;
+    private PlacesViewModel placesViewModel;
 
     TextView cityNameTextView;
     TextView temperatureTextView;
+    TextView weatherDescriptionTextView;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -40,16 +39,23 @@ public class WeatherFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_weather, container, false);
 
+        cityNameTextView = rootView.findViewById(R.id.city_name_textView);
+        temperatureTextView = rootView.findViewById(R.id.temperature_textView);
+        weatherDescriptionTextView = rootView.findViewById(R.id.description_textView);
+
         // Use ViewModelProviders to associate the ViewModel with the UI controller
         // this is the fragment, it serves as a view controller
         // When the activity is destroyed, for example through a configuration change, the ViewModel persists.
         // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
-        weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
+        placesViewModel = ViewModelProviders.of(this).get(PlacesViewModel.class);
 
-        cityNameTextView = rootView.findViewById(R.id.city_name_textView);
-        temperatureTextView = rootView.findViewById(R.id.temperature_textView);
-
-
+        placesViewModel.getAllPlaces().observe(this, new Observer<List<Place>>() {
+            @Override
+            public void onChanged(@Nullable final List<Place> places) {
+                // Update the cached copy of the places in the adapter.
+                bindData(places.get(0)); // get the first place in places_table
+            }
+        });
 
         return rootView;
     }
@@ -58,22 +64,15 @@ public class WeatherFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
        // new EndpointAsyncTask(this).execute("London, UK");
-       // weatherInfoModel = weatherViewModel.getWeatherInfoModel();
-        weatherViewModel.makeApiCall();
-        //weatherInfoModel = weatherViewModel.getWeatherInfoModel();
-        bindData();
+
     }
 
-    public void bindData() {
-        if (this.weatherInfoModel != null) {
-            cityNameTextView.setText(this.weatherInfoModel.getName());
-            temperatureTextView.setText(this.weatherInfoModel.getMain().getTemp());
+    public void bindData(Place place) {
+        if (place != null) {
+            cityNameTextView.setText(place.getCityName() + ", " + place.getCountry());
+            temperatureTextView.setText(place.getTemperature());
+            weatherDescriptionTextView.setText(place.getWeatherDescription());
         }
     }
 
-//    @Override
-//    public void onResultReceived(WeatherInfoModel weatherInfoModel) {
-//       // this.weatherInfoModel = weatherInfoModel;
-//        //bindData();
-//    }
 }
