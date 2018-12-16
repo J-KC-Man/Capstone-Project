@@ -95,6 +95,7 @@ public class EndpointAsyncTask extends AsyncTask<String,String, String> {
         Gson gson = new Gson();
         WeatherInfoModel weatherInfoModel = gson.fromJson(result, WeatherInfoModel.class);
         // might need to pass this to a repository class later which implements interface
+
         asyncTaskCallback.onResultReceived(weatherInfoModel);
     }
 }

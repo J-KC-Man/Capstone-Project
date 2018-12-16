@@ -2,6 +2,8 @@ package com.jman.capstone_project.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.jman.capstone_project.database.entities.Place;
@@ -14,9 +16,9 @@ public class WeatherViewModel extends AndroidViewModel implements IViewModelCall
     private Repository mRepository;
 
     // reference to WeatherModelInfo object
-    private WeatherInfoModel weatherInfoModel;
+    private LiveData<WeatherInfoModel> weatherInfoModel;
 
-    public WeatherInfoModel getWeatherInfoModel() {
+    public LiveData<WeatherInfoModel> getWeatherInfoModel() {
         return this.weatherInfoModel;
     }
 
@@ -33,6 +35,8 @@ public class WeatherViewModel extends AndroidViewModel implements IViewModelCall
         // repo executes AsyncTask and assigns populated model to this weatherInfoModel
         mRepository.getWeatherForCity();
 
+        weatherInfoModel = mRepository.getWeatherInfoModelLiveData();
+
         // get weather info from repo
        // this.weatherInfoModel = mRepository.getWeatherInfoModel();
         //return this.weatherInfoModel;
@@ -46,7 +50,7 @@ public class WeatherViewModel extends AndroidViewModel implements IViewModelCall
 
     @Override
     public void passToViewModel(WeatherInfoModel weatherInfoModel) {
-        this.weatherInfoModel = weatherInfoModel;
+       // this.weatherInfoModel = weatherInfoModel;
 
 
     }

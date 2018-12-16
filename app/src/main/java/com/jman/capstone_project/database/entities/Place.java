@@ -21,24 +21,15 @@ public class Place {
     @ColumnInfo(name = "country")
     private String mCountry;
 
-    @NonNull
-    @ColumnInfo(name = "temperature")
-    private String mTemperature;
 
-    @NonNull
-    @ColumnInfo(name = "description")
-    private String mWeatherDescription;
 
     public Place(@NonNull String mCityId,
                  @NonNull String mCityName,
-                 @NonNull String mCountry,
-                 @NonNull String mTemperature,
-                 @NonNull String mWeatherDescription) {
+                 @NonNull String mCountry) {
         this.mCityId = mCityId;
         this.mCityName = mCityName;
         this.mCountry = mCountry;
-        this.mTemperature = mTemperature;
-        this.mWeatherDescription = mWeatherDescription;
+
     }
 
     public String getCityId() {
@@ -53,11 +44,4 @@ public class Place {
         return mCountry;
     }
 
-    public String getTemperature() {
-        return mTemperature;
-    }
-
-    public String getWeatherDescription() {
-        return mWeatherDescription;
-    }
 }

@@ -60,7 +60,7 @@ public class WeatherFragment extends Fragment {
        // new EndpointAsyncTask(this).execute("London, UK");
        // weatherInfoModel = weatherViewModel.getWeatherInfoModel();
         weatherViewModel.makeApiCall();
-        weatherInfoModel = weatherViewModel.getWeatherInfoModel();
+        //weatherInfoModel = weatherViewModel.getWeatherInfoModel();
         bindData();
     }
 

@@ -21,7 +21,8 @@ public interface PlaceDao {
     @Query("Delete FROM places_table")
     void deleteAll();
 
-    //todo: add a delete statement to delete one record
+    @Query("DELETE FROM weather_table WHERE city_id=:cityId ")
+    void deletePlace(String cityId);
 
     @Query("SELECT * from places_table")
     LiveData<List<Place>> getAllPlaces();
@@ -33,6 +34,4 @@ public interface PlaceDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updatePlace(Place place);
 
-    @Delete
-    void deletePlace(Place place);
 }
