@@ -53,7 +53,10 @@ public class WeatherFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final List<Place> places) {
                 // Update the cached copy of the places in the adapter.
-                bindData(places.get(0)); // get the first place in places_table
+                if(places != null) {
+                    bindData(places.get(0)); // get the first place in places_table
+                }
+
             }
         });
 
