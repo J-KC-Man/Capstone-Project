@@ -1,12 +1,20 @@
 package com.jman.capstone_project;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.jman.capstone_project.viewmodel.PlacesViewModel;
 
 
 /**
@@ -18,6 +26,13 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class SearchFragment extends Fragment {
+
+    private PlacesViewModel placesViewModel;
+     LiveData<String> cityId;
+
+    EditText searchEditText;
+    Button searchButton;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -54,17 +69,70 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
+//        }
+
+        // Scope viewmodel to Fragment instance lifecycle as it does not change any UI elements
+        // so no need to update data every time the view is destroyed and recreated
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+
+        // Use ViewModelProviders to associate the ViewModel with the UI controller
+        // this is the fragment, it serves as a view controller
+        // When the activity is destroyed, for example through a configuration change, the ViewModel persists.
+        // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
+
+
+        searchEditText = rootView.findViewById(R.id.search_editText);
+        searchButton = rootView.findViewById(R.id.search_button);
+
+
+
+
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        placesViewModel = ViewModelProviders.of(getActivity()).get(PlacesViewModel.class);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //  validate(searchEditText.getText().toString());
+                // pass edit text input to viewmodel to validate
+                search(searchEditText.getText().toString());
+
+            }
+        });
+    }
+
+    public void search(String s) {
+        placesViewModel.makeApiCall(s);
+        placesViewModel.getCityId().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String cityId) {
+                if(cityId == null) {
+                    // set text of error message
+                    return;
+                }
+
+                // replace fragment
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new WeatherFragment())
+                        .commit();
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

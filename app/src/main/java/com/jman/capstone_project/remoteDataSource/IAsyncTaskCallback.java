@@ -10,5 +10,5 @@ import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
  * */
 public interface IAsyncTaskCallback {
 
-    void onResultReceived(WeatherInfoModel weatherInfoModel);
+    void onResultReceived(String result);
 }

@@ -3,14 +3,16 @@ package com.jman.capstone_project.viewmodel;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.jman.capstone_project.database.entities.Place;
+import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
 import com.jman.capstone_project.repository.Repository;
 
 import java.util.List;
 
-public class PlacesViewModel extends AndroidViewModel {
+public class PlacesViewModel extends AndroidViewModel implements IAsyncTaskCallback {
 
     // Add a private member variable to hold a reference to the repository
     private Repository mRepository;
@@ -18,7 +20,11 @@ public class PlacesViewModel extends AndroidViewModel {
     // Add a private LiveData member variable to cache the list of places
     private LiveData<List<Place>> mAllPlaces;
 
+    private MutableLiveData<String> cityId = new MutableLiveData<>();
 
+    public LiveData<String> getCityId() {
+        return cityId;
+    }
 
     public PlacesViewModel(@NonNull Application application) {
         super(application);
@@ -29,6 +35,15 @@ public class PlacesViewModel extends AndroidViewModel {
 
     // A "getter" method for all the places. This completely hides the implementation from the UI
     public LiveData<List<Place>> getAllPlaces() { return mAllPlaces; }
+
+    public void makeApiCall(String queryParams) {
+        mRepository.getWeatherForPlace(queryParams, this);
+    }
+
+    @Override
+    public void onResultReceived(String cityId) {
+        this.cityId.setValue(cityId);
+    }
 
 //    /*
 //    * Get default weather for place

@@ -13,6 +13,7 @@ import com.jman.capstone_project.database.dao.PlaceDao;
 import com.jman.capstone_project.database.entities.Place;
 
 
+import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
 import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
 import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
 
@@ -81,8 +82,8 @@ public class Repository {
         }
     }
 
-    public void getWeatherForCity() {
-       // new WeatherEndpointAsyncTask().execute("London, UK");
+    public void getWeatherForPlace(String apiCallParams, IAsyncTaskCallback asyncTaskCallback) {
+        new WeatherEndpointAsyncTask(mPlaceDao, asyncTaskCallback).execute(apiCallParams);
     }
 
 
@@ -100,9 +101,11 @@ public class Repository {
         String BASE_URL = "https://api.openweathermap.org/data/2.5/weather?q=";
         String API_KEY = BuildConfig.ApiKey;
 
+        private PlaceDao mAsyncTaskDao;
         private IAsyncTaskCallback asyncTaskCallback;
 
-        public WeatherEndpointAsyncTask(IAsyncTaskCallback asyncTaskCallback) {
+        public WeatherEndpointAsyncTask(PlaceDao dao, IAsyncTaskCallback asyncTaskCallback) {
+            mAsyncTaskDao = dao;
             this.asyncTaskCallback = asyncTaskCallback;
         }
 
@@ -135,15 +138,36 @@ public class Repository {
 
                     // this hold all the response
                     topLevel = new JSONObject(builder.toString());
+
+                    // add more code here to parse JSON using GSON
+                    result = topLevel.toString();
+
+                    // deseralise Json string here
+                    Gson gson = new Gson();
+                    WeatherInfoModel weatherInfoModel = gson.fromJson(result, WeatherInfoModel.class);
+
+                    result = weatherInfoModel.getId();
+                    // check if info is already in table
+                    Place place = new Place(
+                            weatherInfoModel.getId(),
+                            weatherInfoModel.getName(),
+                            weatherInfoModel.getSys().getCountry(),
+                            weatherInfoModel.getMain().getTemp(),
+                            //weatherInfoModel.getWeather().getDescription()
+                            "few clouds"
+                    );
+
+                    // insert place into db
+                    mAsyncTaskDao.insert(place);
+
                 }
                 // call is not a 200 response code
                 else {
-                    result = "Call was not successful";
+                   // result = "Call was not successful";
                     return result;
                 }
 
-                // add more code here to parse JSON using GSON
-                result = topLevel.toString();
+
 
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -160,10 +184,10 @@ public class Repository {
         protected void onPostExecute(String result) {
             // super.onPostExecute(result);
             // deseralise Json string here
-            Gson gson = new Gson();
-            WeatherInfoModel weatherInfoModel = gson.fromJson(result, WeatherInfoModel.class);
+//            Gson gson = new Gson();
+//            WeatherInfoModel weatherInfoModel = gson.fromJson(result, WeatherInfoModel.class);
             // might need to pass this to a repository class later which implements interface
-            //asyncTaskCallback.onResultReceived(weatherInfoModel);
+            asyncTaskCallback.onResultReceived(result);
 
             // put it in LiveData use postValue to post a task to main thread to set the value
            // weatherInfoModelLiveData.postValue(weatherInfoModel);

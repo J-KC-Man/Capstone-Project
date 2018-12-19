@@ -26,7 +26,7 @@ import java.net.URLEncoder;
  * Progress, the type of the progress units published during the background computation.
  * Result, the type of the result of the background computation.
 * */
-public class EndpointAsyncTask extends AsyncTask<String,String, String> {
+public class EndpointAsyncTask extends AsyncTask<String,String, Void> {
 
     // this needs to be put into the strings file
     String BASE_URL = "https://api.openweathermap.org/data/2.5/weather?q=";
@@ -34,12 +34,12 @@ public class EndpointAsyncTask extends AsyncTask<String,String, String> {
 
     private IAsyncTaskCallback asyncTaskCallback;
 
-    public EndpointAsyncTask(IAsyncTaskCallback asyncTaskCallback) {
-        this.asyncTaskCallback = asyncTaskCallback;
+    public EndpointAsyncTask() {
+       // this.asyncTaskCallback = asyncTaskCallback;
     }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected Void doInBackground(String... strings) {
 
         HttpURLConnection connection = null;
         URL url;
@@ -47,7 +47,7 @@ public class EndpointAsyncTask extends AsyncTask<String,String, String> {
         String result = null;
 
         try {
-            // create URL
+            // create URL - will need another URL for longitude and lat
             url = new URL(BASE_URL + URLEncoder.encode(strings[0], "UTF-8")
             + "&APPID=" + API_KEY);
 
@@ -67,15 +67,20 @@ public class EndpointAsyncTask extends AsyncTask<String,String, String> {
 
                 // this hold all the response
                 topLevel = new JSONObject(builder.toString());
+
+                // add more code here to parse JSON using GSON
+                result = topLevel.toString();
+                Gson gson = new Gson();
+                WeatherInfoModel weatherInfoModel = gson.fromJson(result, WeatherInfoModel.class);
+
             }
             // call is not a 200 response code
             else {
                 result = "Call was not successful";
-                return result;
+               // return result;
             }
 
-            // add more code here to parse JSON using GSON
-            result = topLevel.toString();
+
 
         } catch (IOException | JSONException e) {
             e.printStackTrace();
@@ -85,17 +90,21 @@ public class EndpointAsyncTask extends AsyncTask<String,String, String> {
                 connection.disconnect();
             }
         }
-        return result;
+       // return result;
+        return null;
     }
 
     @Override
-    protected void onPostExecute(String result) {
+    protected void onPostExecute(Void aVoid) {
        // super.onPostExecute(result);
         // deseralise Json string here
-        Gson gson = new Gson();
-        WeatherInfoModel weatherInfoModel = gson.fromJson(result, WeatherInfoModel.class);
-        // might need to pass this to a repository class later which implements interface
+//        Gson gson = new Gson();
+//        WeatherInfoModel weatherInfoModel = gson.fromJson(result, WeatherInfoModel.class);
 
-        asyncTaskCallback.onResultReceived(weatherInfoModel);
+
+        //asyncTaskCallback.onResultReceived(weatherInfoModel);
+
+        //Put in database
     }
+
 }

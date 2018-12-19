@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,22 +44,7 @@ public class WeatherFragment extends Fragment {
         temperatureTextView = rootView.findViewById(R.id.temperature_textView);
         weatherDescriptionTextView = rootView.findViewById(R.id.description_textView);
 
-        // Use ViewModelProviders to associate the ViewModel with the UI controller
-        // this is the fragment, it serves as a view controller
-        // When the activity is destroyed, for example through a configuration change, the ViewModel persists.
-        // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
-        placesViewModel = ViewModelProviders.of(this).get(PlacesViewModel.class);
 
-        placesViewModel.getAllPlaces().observe(this, new Observer<List<Place>>() {
-            @Override
-            public void onChanged(@Nullable final List<Place> places) {
-                // Update the cached copy of the places in the adapter.
-                if(places != null) {
-                    bindData(places.get(0)); // get the first place in places_table
-                }
-
-            }
-        });
 
         return rootView;
     }
@@ -66,7 +52,36 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-       // new EndpointAsyncTask(this).execute("London, UK");
+        // Use ViewModelProviders to associate the ViewModel with the UI controller
+        // this is the fragment, it serves as a view controller
+        // When the activity is destroyed, for example through a configuration change, the ViewModel persists.
+        // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
+        placesViewModel = ViewModelProviders.of(this).get(PlacesViewModel.class);
+
+        placesViewModel.getCityId().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String cityId) {
+                if(cityId == null) {
+                    return;
+                }
+                // get the record from the db but set city id in textview first
+                Log.d("Get the cityId", "CityId is " + cityId);
+                cityNameTextView.setText(cityId);
+
+            }
+        });
+
+        placesViewModel.getAllPlaces().observe(this, new Observer<List<Place>>() {
+            @Override
+            public void onChanged(@Nullable final List<Place> places) {
+                // Update the cached copy of the places in the adapter.
+                if(places != null) {
+                    // this needs to be changed
+                    //  bindData(places.get(0)); // get the first place in places_table
+                }
+
+            }
+        });
 
     }
 
