@@ -1,6 +1,7 @@
 package com.jman.capstone_project;
 
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -33,6 +34,15 @@ public class WeatherFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Use ViewModelProviders to associate the ViewModel with the UI controller
+        // this is the fragment, it serves as a view controller
+        // When the activity is destroyed, for example through a configuration change, the ViewModel persists.
+        // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +66,7 @@ public class WeatherFragment extends Fragment {
         // this is the fragment, it serves as a view controller
         // When the activity is destroyed, for example through a configuration change, the ViewModel persists.
         // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
-        placesViewModel = ViewModelProviders.of(this).get(PlacesViewModel.class);
+        placesViewModel = ViewModelProviders.of(getActivity()).get(PlacesViewModel.class);
 
         placesViewModel.getCityId().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -64,24 +74,37 @@ public class WeatherFragment extends Fragment {
                 if(cityId == null) {
                     return;
                 }
-                // get the record from the db but set city id in textview first
+                // get the record from the db
                 Log.d("Get the cityId", "CityId is " + cityId);
-                cityNameTextView.setText(cityId);
+               // cityNameTextView.setText(cityId);
+                placesViewModel.getPlaceById(cityId);
+            //    cityNameTextView.setText(placesViewModel.getPlaceById(cityId).getValue().getCityName());
+
+
+//                placesViewModel.getPlaceById(cityId).observe(getViewLifecycleOwner(), new Observer<Place>() {
+//                    @Override
+//                    public void onChanged(@Nullable Place place) {
+//                        if(place == null) {
+//                            return;
+//                        }
+//                        cityNameTextView.setText(place.getCityName());
+//                    }
+//                });
 
             }
         });
 
-        placesViewModel.getAllPlaces().observe(this, new Observer<List<Place>>() {
-            @Override
-            public void onChanged(@Nullable final List<Place> places) {
-                // Update the cached copy of the places in the adapter.
-                if(places != null) {
-                    // this needs to be changed
-                    //  bindData(places.get(0)); // get the first place in places_table
-                }
-
-            }
-        });
+//        placesViewModel.getAllPlaces().observe(this, new Observer<List<Place>>() {
+//            @Override
+//            public void onChanged(@Nullable final List<Place> places) {
+//                // Update the cached copy of the places in the adapter.
+//                if(places != null) {
+//                    // this needs to be changed
+//                    //  bindData(places.get(0)); // get the first place in places_table
+//                }
+//
+//            }
+//        });
 
     }
 

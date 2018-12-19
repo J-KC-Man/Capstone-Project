@@ -35,7 +35,8 @@ public class Repository {
 
     private PlaceDao mPlaceDao;
     private LiveData<List<Place>> mAllPlaces;
-    private LiveData<Place> mWeatherInfo;
+    private LiveData<Place> mDefaultWeatherInfo;
+    private LiveData<Place> mWeatherInfoForCity;
 
 
     public Repository(Application application) {
@@ -52,15 +53,20 @@ public class Repository {
     * Get default weather
     * */
     public LiveData<Place> getWeather() {
-        this.mWeatherInfo = mPlaceDao.getDefaultPlace();
+        this.mDefaultWeatherInfo = mPlaceDao.getDefaultPlace();
 
-        return this.mWeatherInfo;
+        return this.mDefaultWeatherInfo;
     }
 
     public LiveData<List<Place>> getmAllPlaces() {
         return mAllPlaces;
     }
 
+    public LiveData<Place> getWeatherInfoForCity(String cityId) {
+        this.mWeatherInfoForCity = mPlaceDao.findPlaceByCityId(cityId);
+
+        return this.mWeatherInfoForCity;
+    }
 
     public void insert (Place place) {
         new insertAsyncTask(mPlaceDao).execute(place);
@@ -109,6 +115,7 @@ public class Repository {
             this.asyncTaskCallback = asyncTaskCallback;
         }
 
+        // TODO: prepare full URL first and pass it as a parameter to AsyncTask
         @Override
         protected String doInBackground(String... strings) {
 
@@ -157,6 +164,7 @@ public class Repository {
                             "few clouds"
                     );
 
+                    //TODO: Check if record is already in DB first before inserting, if not insert
                     // insert place into db
                     mAsyncTaskDao.insert(place);
 

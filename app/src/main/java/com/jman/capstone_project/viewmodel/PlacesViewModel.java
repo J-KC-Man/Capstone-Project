@@ -20,6 +20,10 @@ public class PlacesViewModel extends AndroidViewModel implements IAsyncTaskCallb
     // Add a private LiveData member variable to cache the list of places
     private LiveData<List<Place>> mAllPlaces;
 
+    // Add a private LiveData member variable to cache the list of places
+    private LiveData<Place> mPlaceById;
+
+    // Add a private LiveData member variable to cache the searched cityId
     private MutableLiveData<String> cityId = new MutableLiveData<>();
 
     public LiveData<String> getCityId() {
@@ -36,7 +40,14 @@ public class PlacesViewModel extends AndroidViewModel implements IAsyncTaskCallb
     // A "getter" method for all the places. This completely hides the implementation from the UI
     public LiveData<List<Place>> getAllPlaces() { return mAllPlaces; }
 
+    // A "getter" method for places with cityId. This completely hides the implementation from the UI
+    public LiveData<Place> getPlaceById(String cityId) {
+        mPlaceById = mRepository.getWeatherInfoForCity(cityId);
+        return mPlaceById;
+    }
+
     public void makeApiCall(String queryParams) {
+        //TODO: validate queryParams before passing it to mRepository
         mRepository.getWeatherForPlace(queryParams, this);
     }
 
