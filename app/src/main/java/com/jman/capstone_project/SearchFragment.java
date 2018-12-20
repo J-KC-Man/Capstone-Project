@@ -4,15 +4,20 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jman.capstone_project.viewmodel.PlacesViewModel;
 
@@ -32,6 +37,7 @@ public class SearchFragment extends Fragment {
 
     EditText searchEditText;
     Button searchButton;
+    TextView resultMessageTextView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,7 +99,7 @@ public class SearchFragment extends Fragment {
 
         searchEditText = rootView.findViewById(R.id.search_editText);
         searchButton = rootView.findViewById(R.id.search_button);
-
+        resultMessageTextView = rootView.findViewById(R.id.error_message_textView);
 
 
 
@@ -111,6 +117,12 @@ public class SearchFragment extends Fragment {
                 //  validate(searchEditText.getText().toString());
                 // pass edit text input to viewmodel to validate
                 search(searchEditText.getText().toString());
+                try {
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                } catch (Exception e) {
+                   Toast.makeText(getActivity(),"Keyboard already hidden", Toast.LENGTH_SHORT);
+                }
 
             }
         });
@@ -125,12 +137,14 @@ public class SearchFragment extends Fragment {
                     // set text of error message
                     return;
                 }
+                resultMessageTextView.setText("Press Home to see weather");
+                resultMessageTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
                 // replace fragment
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, new WeatherFragment())
-                        .commit();
+//                getActivity().getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .replace(R.id.fragment_container, new WeatherFragment())
+//                        .commit();
             }
         });
     }

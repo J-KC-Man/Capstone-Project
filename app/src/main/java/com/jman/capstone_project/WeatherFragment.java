@@ -68,44 +68,32 @@ public class WeatherFragment extends Fragment {
         // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
         placesViewModel = ViewModelProviders.of(getActivity()).get(PlacesViewModel.class);
 
-        placesViewModel.getCityId().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String cityId) {
-                if(cityId == null) {
-                    return;
-                }
-                // get the record from the db
-                Log.d("Get the cityId", "CityId is " + cityId);
-               // cityNameTextView.setText(cityId);
-                placesViewModel.getPlaceById(cityId);
-            //    cityNameTextView.setText(placesViewModel.getPlaceById(cityId).getValue().getCityName());
+        placesViewModel.getPlaceById(placesViewModel.getCityId().getValue()).observe(getViewLifecycleOwner(), new Observer<Place>() {
+                    @Override
+                    public void onChanged(@Nullable Place place) {
+                        if(place == null) {
+                            return;
+                        }
+                        cityNameTextView.setText(place.getCityName() + ", " + place.getCountry());
+                        temperatureTextView.setText(place.getTemperature());
+                        weatherDescriptionTextView.setText(place.getWeatherDescription());
+                    }
+                });
 
-
-//                placesViewModel.getPlaceById(cityId).observe(getViewLifecycleOwner(), new Observer<Place>() {
-//                    @Override
-//                    public void onChanged(@Nullable Place place) {
-//                        if(place == null) {
-//                            return;
-//                        }
-//                        cityNameTextView.setText(place.getCityName());
-//                    }
-//                });
-
-            }
-        });
-
-//        placesViewModel.getAllPlaces().observe(this, new Observer<List<Place>>() {
+//        placesViewModel.getCityId().observe(getViewLifecycleOwner(), new Observer<String>() {
 //            @Override
-//            public void onChanged(@Nullable final List<Place> places) {
-//                // Update the cached copy of the places in the adapter.
-//                if(places != null) {
-//                    // this needs to be changed
-//                    //  bindData(places.get(0)); // get the first place in places_table
+//            public void onChanged(@Nullable String cityId) {
+//                if(cityId == null) {
+//                    return;
 //                }
+//                // get the record from the db
+//                Log.d("Get the cityId", "CityId is " + cityId);
+//               // cityNameTextView.setText(cityId);
+//               // placesViewModel.getPlaceById(cityId);
+//            //    cityNameTextView.setText(placesViewModel.getPlaceById(cityId).getValue().getCityName());
 //
 //            }
 //        });
-
     }
 
     public void bindData(Place place) {

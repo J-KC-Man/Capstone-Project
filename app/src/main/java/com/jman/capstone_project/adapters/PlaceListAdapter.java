@@ -48,7 +48,8 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
     public void onBindViewHolder(@NonNull PlaceViewHolder placeViewHolder, int position) {
         if(mPlaces != null) {
             Place currentPlace = mPlaces.get(position);
-            placeViewHolder.placeItemTextView.setText(currentPlace.getCityName());
+            placeViewHolder.placeItemTextView.setText(
+                    currentPlace.getCityName() + ", " + currentPlace.getCountry());
         }
     }
 
@@ -56,11 +57,6 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
      * Updates list of words from db
      *
      **/
-//    public void setPlaces(List<Place> places){
-//        mPlaces = places;
-//        notifyDataSetChanged();
-//    }
-
     public void setPlaces(List<Place> places){
         mPlaces = places;
         notifyDataSetChanged();

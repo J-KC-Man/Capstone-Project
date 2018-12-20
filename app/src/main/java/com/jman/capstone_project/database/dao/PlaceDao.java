@@ -18,8 +18,8 @@ public interface PlaceDao {
     @Query("SELECT * from places_table LIMIT 1")
     LiveData<Place> getDefaultPlace();
 
-    @Insert
-    void insert(Place place);
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    long insert(Place place);
 
     @Query("Delete FROM places_table")
     void deleteAll();
@@ -31,7 +31,8 @@ public interface PlaceDao {
     LiveData<List<Place>> getAllPlaces();
 
     // get one place by city id
-    @Query("SELECT * from places_table WHERE city_id=:cityId")
+   @Query("SELECT * from places_table WHERE city_id=:cityId")
+    //@Query("SELECT * from places_table ORDER BY city_id DESC LIMIT 1")
     LiveData<Place> findPlaceByCityId(String cityId);
 
     // for updating weather - you need to get the right place to update before calling this method

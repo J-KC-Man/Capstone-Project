@@ -164,9 +164,13 @@ public class Repository {
                             "few clouds"
                     );
 
-                    //TODO: Check if record is already in DB first before inserting, if not insert
-                    // insert place into db
-                    mAsyncTaskDao.insert(place);
+                    // Check if record is already in DB first before inserting
+                    // by matching the id, if not insert, if yes update
+                    // insert place into db, any issues will return -1
+                    long id = mAsyncTaskDao.insert(place);
+                    if (id == -1) {
+                        mAsyncTaskDao.updatePlace(place);
+                    }
 
                 }
                 // call is not a 200 response code
