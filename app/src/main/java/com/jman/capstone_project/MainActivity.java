@@ -6,15 +6,13 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 
-import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
-import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
-import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
 
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView
         .OnNavigationItemSelectedListener {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +24,6 @@ public class MainActivity extends AppCompatActivity
 
         // set default selected item to Home
         navigation.setSelectedItemId(R.id.navigation_home);
-
-        // init asynctask object and make the MainActivity the callback calling object
-        //new EndpointAsyncTask(this).execute("London, UK");
 
         loadFragment(new WeatherFragment());
     }

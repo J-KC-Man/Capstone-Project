@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +20,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.jman.capstone_project.viewmodel.PlacesViewModel;
+
+import java.util.concurrent.Executor;
 
 
 /**
@@ -38,6 +44,8 @@ public class SearchFragment extends Fragment {
     EditText searchEditText;
     Button searchButton;
     TextView resultMessageTextView;
+
+    private FusedLocationProviderClient mFusedLocationClient;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -101,7 +109,18 @@ public class SearchFragment extends Fragment {
         searchButton = rootView.findViewById(R.id.search_button);
         resultMessageTextView = rootView.findViewById(R.id.error_message_textView);
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
+//        mFusedLocationClient.getLastLocation()
+//                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+//                    @Override
+//                    public void onSuccess(Location location) {
+//                        // Got last known location. In some rare situations this can be null.
+//                        if (location != null) {
+//                            // Logic to handle location object
+//                        }
+//                    }
+//                });
 
         return rootView;
     }
@@ -129,6 +148,7 @@ public class SearchFragment extends Fragment {
     }
 
     public void search(String s) {
+        resultMessageTextView.setText("Loading..."); // TODO: replace with loading indicator
         placesViewModel.makeApiCall(s);
         placesViewModel.getCityId().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -137,7 +157,7 @@ public class SearchFragment extends Fragment {
                     // set text of error message
                     return;
                 }
-                resultMessageTextView.setText("Press Home to see weather");
+                resultMessageTextView.setText("Press Home to see weather"); // TODO: put message in strings.xml
                 resultMessageTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
                 // replace fragment
