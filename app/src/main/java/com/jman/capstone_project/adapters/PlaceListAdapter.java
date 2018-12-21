@@ -15,15 +15,6 @@ import java.util.List;
 
 public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.PlaceViewHolder> {
 
-    class PlaceViewHolder extends RecyclerView.ViewHolder {
-        private final TextView placeItemTextView;
-
-        private PlaceViewHolder(View itemView) {
-            super(itemView);
-            placeItemTextView = itemView.findViewById(R.id.place_list_item_textView);
-        }
-    }
-
     private final LayoutInflater mInflater;
     private List<Place> mPlaces; // Cached copy of places
 
@@ -70,4 +61,26 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
             return 0;
         }
     }
-}
+
+    class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private final TextView placeItemTextView;
+
+        private PlaceViewHolder(View itemView) {
+            super(itemView);
+            placeItemTextView = itemView.findViewById(R.id.place_list_item_textView);
+
+            itemView.setOnClickListener(PlaceViewHolder.this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition(); // gets item position
+            if (position != RecyclerView.NO_POSITION) { // Check if an item was deleted, but the user clicked it before the UI removed it
+
+                // pass to viewmodel using interface callback
+                // viewmodel sets position in live data
+                // activity using position
+            }
+        }
+    } // end of viewholder class
+} // end of adapter class
