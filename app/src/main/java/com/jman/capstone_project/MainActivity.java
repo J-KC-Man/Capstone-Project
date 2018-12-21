@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.jman.capstone_project.database.entities.Place;
 import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
 import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
 import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
@@ -69,5 +70,21 @@ public class MainActivity extends AppCompatActivity
         return loadFragment(fragment);
     }
 
+    public void loadWeatherFragment(Place place) {
+
+        WeatherFragment weatherFragment = new WeatherFragment();
+
+        Bundle arguments = new Bundle();
+
+        arguments.putString("cityId", place.getCityId());
+        arguments.putString("cityName", place.getCityName());
+        arguments.putString("country", place.getCountry());
+        arguments.putString("temperature", place.getTemperature());
+        arguments.putString("description", place.getWeatherDescription());
+
+        weatherFragment.setArguments(arguments);
+
+        loadFragment(weatherFragment);
+    }
 
 }

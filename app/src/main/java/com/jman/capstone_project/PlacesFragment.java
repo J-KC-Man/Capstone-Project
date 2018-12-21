@@ -69,7 +69,9 @@ public class PlacesFragment extends Fragment implements IViewModelCallback {
         // load fragment from MainActivity and pass in Place
         // This tightly couples the fragment to the underlying activity
         // an improvement would be to use another interface callback
-        ((MainActivity) getActivity()).loadFragment(new WeatherFragment());
+        // or could call viewmodel and set place to livedata
+        // in WeatherFrag I can retrieve the place and observe it
+        ((MainActivity) getActivity()).loadWeatherFragment(place);
 
     }
 }

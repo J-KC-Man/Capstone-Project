@@ -30,6 +30,8 @@ public class WeatherFragment extends Fragment {
     TextView temperatureTextView;
     TextView weatherDescriptionTextView;
 
+    private Bundle bundle;
+
     public WeatherFragment() {
         // Required empty public constructor
     }
@@ -68,28 +70,40 @@ public class WeatherFragment extends Fragment {
         // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
         placesViewModel = ViewModelProviders.of(getActivity()).get(PlacesViewModel.class);
 
-        placesViewModel.getPosition().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(@Nullable Integer integer) {
-                if(integer == null) {
-                    return;
-                }
-               Place place = placesViewModel.getAllPlaces().getValue().get(integer.intValue());
+//        placesViewModel.getPosition().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+////            @Override
+////            public void onChanged(@Nullable Integer integer) {
+////                if(integer == null) {
+////                    return;
+////                }
+////               Place place = placesViewModel.getAllPlaces().getValue().get(integer.intValue());
+////
+////            }
+////        });
 
-            }
-        });
+        bundle = getArguments();
+        if(bundle == null) {
 
-        placesViewModel.getPlaceById(placesViewModel.getCityId().getValue()).observe(getViewLifecycleOwner(), new Observer<Place>() {
-                    @Override
-                    public void onChanged(@Nullable Place place) {
-                        if(place == null) {
-                            return;
-                        }
-                        cityNameTextView.setText(place.getCityName() + ", " + place.getCountry());
-                        temperatureTextView.setText(place.getTemperature());
-                        weatherDescriptionTextView.setText(place.getWeatherDescription());
+            placesViewModel.getPlaceById(placesViewModel.getCityId().getValue()).observe(getViewLifecycleOwner(), new Observer<Place>() {
+                @Override
+                public void onChanged(@Nullable Place place) {
+                    if (place == null) {
+                        return;
                     }
-                });
+                    cityNameTextView.setText(place.getCityName() + ", " + place.getCountry());
+                    temperatureTextView.setText(place.getTemperature());
+                    weatherDescriptionTextView.setText(place.getWeatherDescription());
+                }
+            });
+        } else {
+            cityNameTextView.setText(bundle.getString("cityName") + ", " + bundle.getString("country"));
+            temperatureTextView.setText(bundle.getString("temperature"));
+            weatherDescriptionTextView.setText(bundle.getString("description"));
+        }
+
+        /*
+        * Show default place - the first place in the table if there are records in table
+        * */
 
 //        placesViewModel.getCityId().observe(getViewLifecycleOwner(), new Observer<String>() {
 //            @Override
