@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.jman.capstone_project.R;
 import com.jman.capstone_project.database.entities.Place;
+import com.jman.capstone_project.viewmodel.IViewModelCallback;
 
 import java.util.List;
 
@@ -18,9 +19,11 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
     private final LayoutInflater mInflater;
     private List<Place> mPlaces; // Cached copy of places
 
+    IViewModelCallback iViewModelCallback;
 
-    public PlaceListAdapter(Context context) {
 
+    public PlaceListAdapter(Context context, IViewModelCallback iViewModelCallback) {
+        this.iViewModelCallback = iViewModelCallback;
         // mInflater is initialised here to avoid declaring a new Context field
         // context is only really going to be using in onCreateViewHolder
         mInflater = LayoutInflater.from(context);
@@ -79,7 +82,8 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
 
                 // pass to viewmodel using interface callback
                 // viewmodel sets position in live data
-                // activity using position
+                // Weather frag uses position to get the right record in mAllPlaces
+                iViewModelCallback.passToViewModel(position);
             }
         }
     } // end of viewholder class

@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity
         loadFragment(new WeatherFragment());
     }
 
-    private boolean loadFragment(Fragment fragment) {
+    public boolean loadFragment(Fragment fragment) {
 
         // is there a fragment already loaded?
         if(fragment != null) {

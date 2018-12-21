@@ -27,6 +27,18 @@ public class PlacesViewModel extends AndroidViewModel implements IAsyncTaskCallb
     // Add a private LiveData member variable to cache the searched cityId
     private MutableLiveData<String> cityId = new MutableLiveData<>();
 
+    // a private LiveData member variable to cache the clicked position on places fragment
+    private MutableLiveData<Integer> position = new MutableLiveData<>();
+
+    public LiveData<Integer> getPosition() {
+        return position;
+    }
+
+    // sets the livedata object when place is selected on PlacesFragment
+    public void setPosition(int position) {
+        this.position.setValue(new Integer(position));
+    }
+
     public LiveData<String> getCityId() {
         return cityId;
     }
@@ -56,6 +68,8 @@ public class PlacesViewModel extends AndroidViewModel implements IAsyncTaskCallb
     public void onResultReceived(String cityId) {
         this.cityId.setValue(cityId);
     }
+
+
 
 //    /*
 //    * Get default weather for place

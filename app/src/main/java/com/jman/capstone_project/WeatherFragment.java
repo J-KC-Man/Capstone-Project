@@ -68,6 +68,17 @@ public class WeatherFragment extends Fragment {
         // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
         placesViewModel = ViewModelProviders.of(getActivity()).get(PlacesViewModel.class);
 
+        placesViewModel.getPosition().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer integer) {
+                if(integer == null) {
+                    return;
+                }
+               Place place = placesViewModel.getAllPlaces().getValue().get(integer.intValue());
+
+            }
+        });
+
         placesViewModel.getPlaceById(placesViewModel.getCityId().getValue()).observe(getViewLifecycleOwner(), new Observer<Place>() {
                     @Override
                     public void onChanged(@Nullable Place place) {
