@@ -10,6 +10,7 @@ import com.jman.capstone_project.database.entities.Place;
 import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
 import com.jman.capstone_project.repository.Repository;
 
+import java.net.URL;
 import java.util.List;
 
 public class PlacesViewModel extends AndroidViewModel implements IAsyncTaskCallback {
@@ -46,9 +47,9 @@ public class PlacesViewModel extends AndroidViewModel implements IAsyncTaskCallb
         return mPlaceById;
     }
 
-    public void makeApiCall(String queryParams) {
-        //TODO: validate queryParams before passing it to mRepository
-        mRepository.getWeatherForPlace(queryParams, this);
+    public void makeApiCall(String params) {
+
+        mRepository.getWeatherForPlace(params, this);
     }
 
     @Override

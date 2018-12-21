@@ -90,9 +90,9 @@ public class WeatherInfoModel {
         this.base = base;
     }
 
-    public Weather[] getWeather ()
+    public Weather getWeather (int index)
     {
-        return weather;
+        return weather[index];
     }
 
     public Main getMain ()

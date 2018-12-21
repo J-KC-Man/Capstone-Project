@@ -5,6 +5,9 @@
     <string name="title_places">My Places</string>
 
     <!--Search Fragment-->
+    <string name="search_edittext_hint">Enter place, eg \"London, UK\"</string>
     <string name="search_button_text">SEARCH</string>
     <string name="location_search_text">Search by location instead</string>
+    <string name="search_validation_error">Please input a valid location eg: London, UK</string>
+
 </resources>

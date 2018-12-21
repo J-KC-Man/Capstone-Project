@@ -19,12 +19,12 @@
 
     <EditText
         android:id="@+id/search_editText"
-        android:layout_width="229dp"
+        android:layout_width="235dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="44dp"
         android:layout_marginEnd="8dp"
-        android:hint="Enter a location name"
+        android:hint="@string/search_edittext_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
