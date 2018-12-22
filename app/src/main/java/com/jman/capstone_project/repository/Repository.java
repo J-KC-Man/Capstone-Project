@@ -31,6 +31,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 
+import static com.jman.capstone_project.global.Constants.API_KEY;
+import static com.jman.capstone_project.global.Constants.BASE_URL_TEXT_SEARCH;
+
 public class Repository {
 
     private PlaceDao mPlaceDao;
@@ -88,8 +91,8 @@ public class Repository {
         }
     }
 
-    public void getWeatherForPlace(String apiCallParams, IAsyncTaskCallback asyncTaskCallback) {
-        new WeatherEndpointAsyncTask(mPlaceDao, asyncTaskCallback).execute(apiCallParams);
+    public void getWeatherForPlace(String string, IAsyncTaskCallback asyncTaskCallback) {
+        new WeatherEndpointAsyncTask(mPlaceDao, asyncTaskCallback).execute(string);
     }
 
 
@@ -103,10 +106,6 @@ public class Repository {
      * */
     public class WeatherEndpointAsyncTask extends AsyncTask<String,String, String> {
 
-        // this needs to be put into the strings file
-        String BASE_URL = "https://api.openweathermap.org/data/2.5/weather?q=";
-        String API_KEY = BuildConfig.ApiKey;
-
         private PlaceDao mAsyncTaskDao;
         private IAsyncTaskCallback asyncTaskCallback;
 
@@ -115,7 +114,6 @@ public class Repository {
             this.asyncTaskCallback = asyncTaskCallback;
         }
 
-        // TODO: prepare full URL first and pass it as a parameter to AsyncTask
         @Override
         protected String doInBackground(String... strings) {
 
@@ -123,14 +121,18 @@ public class Repository {
             URL url;
             JSONObject topLevel;
             String result = null;
+            // strings[0] is the base URL
 
             try {
-                // create URL
-                url = new URL(BASE_URL + URLEncoder.encode(strings[0], "UTF-8")
-                        + "&APPID=" + API_KEY);
+
+               // if(strings[0] == "text")
+                    // create URL
+                url = new URL(BASE_URL_TEXT_SEARCH + URLEncoder.encode(strings[0], "UTF-8")
+                            + "&APPID=" + API_KEY);
 
                 // Open connection
                 connection = (HttpURLConnection) url.openConnection();
+
 
                 if(connection.getResponseCode() == 200) {
                     // get inputstream and convert to buffered format so it can be read in
@@ -160,8 +162,7 @@ public class Repository {
                             weatherInfoModel.getName(),
                             weatherInfoModel.getSys().getCountry(),
                             weatherInfoModel.getMain().getTemp(),
-                            //weatherInfoModel.getWeather().getDescription()
-                            "few clouds"
+                            weatherInfoModel.getWeather(0).getDescription() // get the only object in array
                     );
 
                     // Check if record is already in DB first before inserting

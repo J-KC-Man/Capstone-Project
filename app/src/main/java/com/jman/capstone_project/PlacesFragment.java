@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.jman.capstone_project.adapters.PlaceListAdapter;
 import com.jman.capstone_project.database.entities.Place;
+import com.jman.capstone_project.viewmodel.IViewModelCallback;
 import com.jman.capstone_project.viewmodel.PlacesViewModel;
 
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PlacesFragment extends Fragment {
+public class PlacesFragment extends Fragment implements IViewModelCallback {
 
     private PlacesViewModel mPlacesViewModel;
 
@@ -41,7 +42,7 @@ public class PlacesFragment extends Fragment {
         RecyclerView recyclerView = rootView.findViewById(R.id.places_recyclerview);
 
         // init & set adapter
-        final PlaceListAdapter mAdapter = new PlaceListAdapter(getContext());
+        final PlaceListAdapter mAdapter = new PlaceListAdapter(getContext(), this);
         recyclerView.setAdapter(mAdapter);
 
         // attach recyclerView and adapter
@@ -61,4 +62,16 @@ public class PlacesFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void passToViewModel(int position) {
+        mPlacesViewModel.setPosition(position);
+        Place place = mPlacesViewModel.getAllPlaces().getValue().get(position);
+        // load fragment from MainActivity and pass in Place
+        // This tightly couples the fragment to the underlying activity
+        // an improvement would be to use another interface callback
+        // or could call viewmodel and set place to livedata
+        // in WeatherFrag I can retrieve the place and observe it
+        ((MainActivity) getActivity()).loadWeatherFragment(place);
+
+    }
 }

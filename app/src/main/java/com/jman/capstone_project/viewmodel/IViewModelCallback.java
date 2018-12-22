@@ -4,5 +4,5 @@ import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
 
 public interface IViewModelCallback {
 
-    void passToViewModel(WeatherInfoModel weatherInfoModel);
+    void passToViewModel(int position);
 }
