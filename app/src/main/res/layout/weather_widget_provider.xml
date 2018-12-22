@@ -14,7 +14,7 @@
         android:background="@color/colorPrimary">
 
         <TextView
-            android:id="@+id/widget_provider_recipe_title"
+            android:id="@+id/widget_provider_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"

@@ -4,7 +4,9 @@ package com.jman.capstone_project;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,10 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jman.capstone_project.database.entities.Place;
 import com.jman.capstone_project.viewmodel.PlacesViewModel;
+import com.jman.capstone_project.widget.WeatherWidgetIntentService;
 
 import java.util.List;
+
+import static com.jman.capstone_project.global.Constants.DESCRIPTION_DEFAULT_SHARED_PREF;
+import static com.jman.capstone_project.global.Constants.PLACE_NAME_DEFAULT_SHARED_PREF;
+import static com.jman.capstone_project.global.Constants.TEMPERATURE_DEFAULT_SHARED_PREF;
 
 
 /**
@@ -61,6 +69,22 @@ public class WeatherFragment extends Fragment {
         return rootView;
     }
 
+    /*
+     * Saves selected recipe to default shared prefs
+     * */
+    private void setRecipeWidgetIngredientsList(String placeName,
+                                                String temperature,
+                                                String description) {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sharedPreferences
+                .edit()
+                .putString(PLACE_NAME_DEFAULT_SHARED_PREF, placeName)
+                .putString(TEMPERATURE_DEFAULT_SHARED_PREF, temperature)
+                .putString(DESCRIPTION_DEFAULT_SHARED_PREF, description)
+                .apply();
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -83,7 +107,7 @@ public class WeatherFragment extends Fragment {
 
         bundle = getArguments();
         if(bundle == null) {
-
+            // If the user searched the location
             placesViewModel.getPlaceById(placesViewModel.getCityId().getValue()).observe(getViewLifecycleOwner(), new Observer<Place>() {
                 @Override
                 public void onChanged(@Nullable Place place) {
@@ -93,13 +117,26 @@ public class WeatherFragment extends Fragment {
                     cityNameTextView.setText(place.getCityName() + ", " + place.getCountry());
                     temperatureTextView.setText(place.getTemperature());
                     weatherDescriptionTextView.setText(place.getWeatherDescription());
+
+                    // for widget
+                    setRecipeWidgetIngredientsList(place.getCityName(), place.getTemperature(), place.getWeatherDescription());
                 }
             });
-        } else {
-            cityNameTextView.setText(bundle.getString("cityName") + ", " + bundle.getString("country"));
-            temperatureTextView.setText(bundle.getString("temperature"));
-            weatherDescriptionTextView.setText(bundle.getString("description"));
+        } else { // if the user clicked on one of their saved places
+            String cityName = bundle.getString("cityName");
+            String country = bundle.getString("country");
+            String temperature = bundle.getString("temperature");
+            String weatherDescription = bundle.getString("description");
+            cityNameTextView.setText(cityName + ", " + country);
+            temperatureTextView.setText(temperature);
+            weatherDescriptionTextView.setText(weatherDescription);
+
+            // for widget
+            setRecipeWidgetIngredientsList(cityName, temperature, weatherDescription);
         }
+
+        /* Update the widget with the place */
+        WeatherWidgetIntentService.startActionUpdateWidget(getContext());
 
         /*
         * Show default place - the first place in the table if there are records in table
