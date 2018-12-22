@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.MobileAds;
 import com.jman.capstone_project.database.entities.Place;
 import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
 import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity
 
         // init asynctask object and make the MainActivity the callback calling object
         //new EndpointAsyncTask(this).execute("London, UK");
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
 
         loadFragment(new WeatherFragment());
     }
