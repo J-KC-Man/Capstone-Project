@@ -158,12 +158,12 @@ public class WeatherFragment extends Fragment {
 //        });
     }
 
-    public void bindData(Place place) {
-        if (place != null) {
-            cityNameTextView.setText(place.getCityName() + ", " + place.getCountry());
-            temperatureTextView.setText(place.getTemperature());
-            weatherDescriptionTextView.setText(place.getWeatherDescription());
-        }
-    }
+//    public void bindData(Place place) {
+//        if (place != null) {
+//            cityNameTextView.setText(place.getCityName() + ", " + place.getCountry());
+//            temperatureTextView.setText(place.getTemperature());
+//            weatherDescriptionTextView.setText(place.getWeatherDescription());
+//        }
+//    }
 
 }

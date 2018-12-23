@@ -59,6 +59,9 @@ public class PlacesViewModel extends AndroidViewModel implements IAsyncTaskCallb
         return mPlaceById;
     }
 
+    /*
+    * entry point to invoking AsyncTask
+    * */
     public void makeApiCall(String params) {
 
         mRepository.getWeatherForPlace(params, this);

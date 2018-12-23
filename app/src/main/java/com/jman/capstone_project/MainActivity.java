@@ -6,13 +6,10 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.google.android.gms.ads.MobileAds;
 import com.jman.capstone_project.database.entities.Place;
-import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
-import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
-import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
+
 
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView

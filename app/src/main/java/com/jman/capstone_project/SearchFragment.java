@@ -1,16 +1,23 @@
 package com.jman.capstone_project;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,29 +29,62 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
 import com.jman.capstone_project.viewmodel.PlacesViewModel;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Locale;
 
-import static com.jman.capstone_project.global.Constants.API_KEY;
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
+
 import static com.jman.capstone_project.global.Constants.BASE_URL_LOCATION_SEARCH;
+import static com.jman.capstone_project.global.Constants.BASE_URL_LOCATION_SEARCH_LON;
 import static com.jman.capstone_project.global.Constants.BASE_URL_TEXT_SEARCH;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 
 public class SearchFragment extends Fragment {
 
     private PlacesViewModel placesViewModel;
-     LiveData<String> cityId;
+    LiveData<String> cityId;
 
     EditText searchEditText;
     Button searchButton;
     TextView resultMessageTextView;
+    TextView searchByLocationTextView;
+
+    /* FusedLocationProvider api*/
+    private FusedLocationProviderClient mFusedLocationClient;
+    private double mLatitude = 0.0, mLongitude = 0.0;
+    private int locationRequestCode = 1000;
+
+    // lists for permissions
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
+    private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
+
 
     public SearchFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
     }
 
     @Override
@@ -56,6 +96,7 @@ public class SearchFragment extends Fragment {
         searchEditText = rootView.findViewById(R.id.search_editText);
         searchButton = rootView.findViewById(R.id.search_button);
         resultMessageTextView = rootView.findViewById(R.id.error_message_textView);
+        searchByLocationTextView = rootView.findViewById(R.id.use_location_textView);
 
         AdView mAdView = rootView.findViewById(R.id.adView);
         // Create an ad request. Check logcat output for the hashed device ID to
@@ -66,7 +107,114 @@ public class SearchFragment extends Fragment {
                 .build();
         mAdView.loadAd(adRequest);
 
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(UPDATE_INTERVAL * 2); // 10 seconds
+        locationRequest.setFastestInterval(FASTEST_INTERVAL); // 5 seconds
+
+        // this is invoked when the location has been requested and recieved
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                        mLatitude = location.getLatitude();
+                        mLongitude = location.getLongitude();
+                    }
+//                    if (mFusedLocationClient != null) {
+//                        mFusedLocationClient.removeLocationUpdates(locationCallback); // put this in onPause
+//                    }
+                }
+            }
+        };
+
+        searchByLocationTextView.setOnClickListener(v -> {
+            getLocation();
+            Log.d("SearchFragment.class", "Long and lat= " + mLongitude + ", " + mLatitude);
+
+            // if long and lat have been updated. use coordinates to create url to pass into AsyncTask
+            if(mLongitude != 0.0 && mLatitude != 0.0) {
+                // create URL to pass into AsyncTask
+                resultMessageTextView.setText(R.string.search_loading_text);
+               search(createUrlFromLocation(mLongitude, mLatitude));
+            }
+
+        });
+
+
         return rootView;
+    }
+
+    private void getLocation() {
+        //Now ask for runtime permission for above android 6 OS devices
+        if (checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // api level 23
+                // request for permission if not granted and get result on onRequestPermissionsResult overridden method
+                requestPermissions(
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        locationRequestCode);
+            }
+
+
+        }
+        // permission already granted
+        else {
+            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+
+//                mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), location -> {
+//                    // if location has already been recieved
+//                    if (location != null) {
+//                        wayLatitude = location.getLatitude();
+//                        wayLongitude = location.getLongitude();
+//
+//                        // show location
+//                        resultMessageTextView.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
+//                    } else {
+//                        // get a location object with location coordinates
+//                        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+//                    }
+//                });
+
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1000: { // the 1000 request is defined by you, helps to id it
+                // If request is cancelled, the result arrays are empty. ie, user doesn;t click anything but presses back button
+                // the rest of the code is run if the user clicks yes or no:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission is granted
+
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), location -> {
+                        if (location != null) {
+                            mLatitude = location.getLatitude();
+                            mLongitude = location.getLongitude();
+
+                        } else {
+                            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+                        }
+                    });
+
+                }
+                // user chooses not to grant permissions
+                else {
+                    Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+
+                    // set text in my app to say that location features are disabled, click again to enable
+                }
+                break;
+            }
+        }
     }
 
     @Override
@@ -81,23 +229,22 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-            try {
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-            } catch (Exception e) {
-                Toast.makeText(getActivity(),"Keyboard already hidden", Toast.LENGTH_SHORT);
-            }
+                try {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), "Keyboard already hidden", Toast.LENGTH_SHORT);
+                }
 
-            String searchTerm = searchEditText.getText().toString();
+                String searchTerm = searchEditText.getText().toString();
                 // pass edit text input to validate
-           if(validate(searchTerm) == true) {
-               search(searchTerm);
-           }
-            else{
-               resultMessageTextView.setText(R.string.search_validation_error);
-               resultMessageTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorRed));
-           }
-
+                if (validate(searchTerm) == true) {
+                    resultMessageTextView.setText(R.string.search_loading_text);
+                    search(createUrlFromText(searchTerm));
+                } else { // there was an issue with the place name
+                    resultMessageTextView.setText(R.string.search_validation_error);
+                    resultMessageTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorRed));
+                }
 
 
             }
@@ -109,8 +256,8 @@ public class SearchFragment extends Fragment {
 
         if (s.equals("")
                 || !s.matches("([A-Z][a-z]*,\\s*[A-Z]{2})")
-     //           || !s.matches("([^\\s]+)")
-                ){
+            //           || !s.matches("([^\\s]+)")
+                ) {
             isValid = false;
         } else {
             isValid = true;
@@ -119,56 +266,102 @@ public class SearchFragment extends Fragment {
         return isValid;
     }
 
-    public void createUrlFromText(String queryParams) {
-        URL url;
-        try {
-            url = new URL(BASE_URL_TEXT_SEARCH + URLEncoder.encode(queryParams, "UTF-8")
-                    + "&APPID=" + API_KEY);
+    public String createUrlFromText(String queryParams) {
 
-            // make api call with this URL
-           // search(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String url = BASE_URL_TEXT_SEARCH + queryParams.replaceAll("\\s","");
+
+        return url;
     }
 
     /*
      * called when location is used for search
      */
-    public void createUrlFromLocation(String queryParams) {
-        URL url;
-        try {
-            url = new URL(BASE_URL_LOCATION_SEARCH + URLEncoder.encode(queryParams, "UTF-8")
-                    + "&APPID=" + API_KEY);
+    public String createUrlFromLocation(Double longitude, Double latitude) {
+        // might need to round doubles and covert to strings
 
-            // make api call with this URL
-           // search(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String url = BASE_URL_LOCATION_SEARCH + latitude.toString() + BASE_URL_LOCATION_SEARCH_LON + longitude.toString();
+
+        return url;
     }
 
     public void search(String queryParams) {
-
 
         placesViewModel.makeApiCall(queryParams);
         placesViewModel.getCityId().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String cityId) {
-                if(cityId == null) {
+                if (cityId == null) {
                     // set text of error message
-                    resultMessageTextView.setText("not a valid place");
+                    resultMessageTextView.setText(R.string.search_invalid_text);
                     return;
                 }
-                resultMessageTextView.setText("Press Home to see weather"); // TODO: put message in strings.xml
+                resultMessageTextView.setText(R.string.search_success_text);
                 resultMessageTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
             }
         });
+    }
+
+    /*
+     * User returns to the fragment
+     * */
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (!checkPlayServices()) {
+            resultMessageTextView.setText(R.string.missing_google_play_services_msg);
+        }
+        if (checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // api level 23
+                // request for permission if not granted and get result on onRequestPermissionsResult overridden method
+                requestPermissions(
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        locationRequestCode);
+            }
+
+        } else { // permission already granted
+            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+        }
+
+    }
+
+    /*
+    * Called when the user leaves the fragment
+    * */
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // stop the location updates
+        mFusedLocationClient.removeLocationUpdates(locationCallback);
+
+    }
+
+    /*
+    * Call this method in onResume
+    * Source: https://medium.com/@ssaurel/getting-gps-location-on-android-with-fused-location-provider-api-1001eb549089
+    * with guidance from https://developers.google.com/android/guides/setup (Ensure Devices Have the Google Play services APK)
+    * Author: Sylvain Saurel
+    * */
+    private boolean checkPlayServices() {
+        //get a reference to the singleton object that provides isGooglePlayServicesAvailable() method
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(getContext());
+
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                // provide error message in dialog and action for user to click on to update play services
+                apiAvailability.getErrorDialog(getActivity(), resultCode, PLAY_SERVICES_RESOLUTION_REQUEST);
+            } else {
+                getActivity().finish();
+            }
+            // there is an issue
+            return false;
+        }
+        // there is no issue
+        return true;
     }
 
 

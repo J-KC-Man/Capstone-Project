@@ -121,14 +121,14 @@ public class Repository {
             URL url;
             JSONObject topLevel;
             String result = null;
-            // strings[0] is the base URL
+
 
             try {
 
-               // if(strings[0] == "text")
-                    // create URL
-                url = new URL(BASE_URL_TEXT_SEARCH + URLEncoder.encode(strings[0], "UTF-8")
-                            + "&APPID=" + API_KEY);
+                // create URL, strings[0] is the base URL
+                url = new URL( strings[0]
+                        + "&units=metric"
+                        + "&APPID=" + API_KEY);
 
                 // Open connection
                 connection = (HttpURLConnection) url.openConnection();

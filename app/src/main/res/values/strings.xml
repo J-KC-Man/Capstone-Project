@@ -11,6 +11,10 @@
     <string name="search_validation_error">Please input a valid location eg: London, UK</string>
     <string name="appwidget_text">Weather app</string>
     <string name="add_widget">Add widget</string>
+    <string name="search_loading_text">Loading...</string>
+    <string name="search_invalid_text">Not a valid place</string>
+    <string name="search_success_text">Press Home to see weather</string>
+    <string name="missing_google_play_services_msg">Google Play Services is required to use location search</string>
 
     <!--Admob-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
