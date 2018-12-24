@@ -1,5 +1,9 @@
 package com.jman.capstone_project;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,7 +17,7 @@ import com.jman.capstone_project.database.entities.Place;
 
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView
-        .OnNavigationItemSelectedListener {
+        .OnNavigationItemSelectedListener, SearchFragment.CheckConnectivityCallback {
 
 
 
@@ -86,6 +90,24 @@ public class MainActivity extends AppCompatActivity
         weatherFragment.setArguments(arguments);
 
         loadFragment(weatherFragment);
+    }
+
+    /*
+     * The following method checks for network connection
+     * The code in this method is from Stack Overflow
+     *
+     * source: https://stackoverflow.com/questions/1560788/how-to-check-internet-access-on-android-inetaddress-never-times-out
+     *
+     * author: gar
+     * profile: https://stackoverflow.com/users/485695/gar
+     *
+     * */
+    @Override
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
     }
 
 }

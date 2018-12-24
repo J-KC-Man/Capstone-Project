@@ -2,6 +2,7 @@ package com.jman.capstone_project;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -14,7 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -34,12 +35,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationResult;
 import com.jman.capstone_project.viewmodel.PlacesViewModel;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Locale;
+import java.util.concurrent.TimeoutException;
 
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
@@ -54,6 +50,22 @@ import com.google.android.gms.location.LocationServices;
 
 
 public class SearchFragment extends Fragment {
+
+    /*
+    * This interface is for accessing the isOnline method in MainActivity
+    * */
+    public interface CheckConnectivityCallback{
+        boolean isOnline();
+    }
+
+    /*
+    * callback object is used in search()
+    * */
+    private CheckConnectivityCallback callback;
+    public void onAttach(Context context){
+        callback = (CheckConnectivityCallback) context;
+        super.onAttach(context);
+    }
 
     private PlacesViewModel placesViewModel;
     LiveData<String> cityId;
@@ -139,7 +151,11 @@ public class SearchFragment extends Fragment {
             if(mLongitude != 0.0 && mLatitude != 0.0) {
                 // create URL to pass into AsyncTask
                 resultMessageTextView.setText(R.string.search_loading_text);
-               search(createUrlFromLocation(mLongitude, mLatitude));
+                try {
+                    search(createUrlFromLocation(mLongitude, mLatitude));
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                }
             }
 
         });
@@ -164,20 +180,6 @@ public class SearchFragment extends Fragment {
         // permission already granted
         else {
             mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-
-//                mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), location -> {
-//                    // if location has already been recieved
-//                    if (location != null) {
-//                        wayLatitude = location.getLatitude();
-//                        wayLongitude = location.getLongitude();
-//
-//                        // show location
-//                        resultMessageTextView.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
-//                    } else {
-//                        // get a location object with location coordinates
-//                        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-//                    }
-//                });
 
         }
     }
@@ -240,7 +242,11 @@ public class SearchFragment extends Fragment {
                 // pass edit text input to validate
                 if (validate(searchTerm) == true) {
                     resultMessageTextView.setText(R.string.search_loading_text);
-                    search(createUrlFromText(searchTerm));
+                    try {
+                        search(createUrlFromText(searchTerm));
+                    } catch (TimeoutException e) {
+                        e.printStackTrace();
+                    }
                 } else { // there was an issue with the place name
                     resultMessageTextView.setText(R.string.search_validation_error);
                     resultMessageTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorRed));
@@ -256,7 +262,6 @@ public class SearchFragment extends Fragment {
 
         if (s.equals("")
                 || !s.matches("([A-Z][a-z]*,\\s*[A-Z]{2})")
-            //           || !s.matches("([^\\s]+)")
                 ) {
             isValid = false;
         } else {
@@ -284,8 +289,16 @@ public class SearchFragment extends Fragment {
         return url;
     }
 
-    public void search(String queryParams) {
+    public void search(String queryParams) throws TimeoutException {
 
+        // check if device has network connection
+        if(!callback.isOnline()) {
+            Toast.makeText(
+                    getContext(),
+                    "No internet connection",
+                    Toast.LENGTH_LONG).show();
+            throw new TimeoutException("Connect timeout: no network connection");
+        }
         placesViewModel.makeApiCall(queryParams);
         placesViewModel.getCityId().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
