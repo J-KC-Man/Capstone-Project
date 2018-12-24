@@ -122,7 +122,7 @@ public class WeatherFragment extends Fragment {
                             return;
                         }
                         cityNameTextView.setText(place.getCityName() + ", " + place.getCountry());
-                        temperatureTextView.setText(place.getTemperature());
+                        temperatureTextView.setText(place.getTemperature() +  " \u2103");
                         weatherDescriptionTextView.setText(place.getWeatherDescription());
                     }
                 });
@@ -134,7 +134,7 @@ public class WeatherFragment extends Fragment {
                             return;
                         }
                         cityNameTextView.setText(place.getCityName() + ", " + place.getCountry());
-                        temperatureTextView.setText(place.getTemperature());
+                        temperatureTextView.setText(place.getTemperature() + " \u2103");
                         weatherDescriptionTextView.setText(place.getWeatherDescription());
 
                         // for widget
@@ -148,7 +148,7 @@ public class WeatherFragment extends Fragment {
             String temperature = bundle.getString("temperature");
             String weatherDescription = bundle.getString("description");
             cityNameTextView.setText(cityName + ", " + country);
-            temperatureTextView.setText(temperature);
+            temperatureTextView.setText(temperature + " \u2103");
             weatherDescriptionTextView.setText(weatherDescription);
 
             // for widget
