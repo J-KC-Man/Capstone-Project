@@ -94,9 +94,9 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
     }
 
     @Override
@@ -109,6 +109,10 @@ public class SearchFragment extends Fragment {
         searchButton = rootView.findViewById(R.id.search_button);
         resultMessageTextView = rootView.findViewById(R.id.error_message_textView);
         searchByLocationTextView = rootView.findViewById(R.id.use_location_textView);
+
+//        if (savedInstanceState != null) {
+//            resultMessageTextView.setText(savedInstanceState.getString("result"));
+//        }
 
         AdView mAdView = rootView.findViewById(R.id.adView);
         // Create an ad request. Check logcat output for the hashed device ID to
@@ -160,9 +164,21 @@ public class SearchFragment extends Fragment {
 
         });
 
-
+        // restore result text if device was rotated after a search was done
+        if (savedInstanceState != null) {
+            String s = savedInstanceState.getString("result");
+            resultMessageTextView.setText(s);
+        }
         return rootView;
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("result",resultMessageTextView.getText().toString());
+        super.onSaveInstanceState(outState);
+    }
+
+
 
     private void getLocation() {
         //Now ask for runtime permission for above android 6 OS devices
@@ -251,10 +267,10 @@ public class SearchFragment extends Fragment {
                     resultMessageTextView.setText(R.string.search_validation_error);
                     resultMessageTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorRed));
                 }
-
-
             }
         });
+
+
     }
 
     public boolean validate(String s) {

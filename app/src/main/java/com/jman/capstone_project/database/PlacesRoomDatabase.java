@@ -66,14 +66,14 @@ public abstract class PlacesRoomDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(final Void... params) {
-            mDao.deleteAll();
+            //mDao.deleteAll();
 
-            Place place = new Place("2643743",
-                    "London",
-                    "GB",
-                    "283.69",
-                    "overcast clouds");
-            mDao.insert(place);
+//            Place place = new Place("2643743",
+//                    "London",
+//                    "GB",
+//                    "3.69",
+//                    "overcast clouds");
+//            mDao.insert(place);
 
             return null;
         }

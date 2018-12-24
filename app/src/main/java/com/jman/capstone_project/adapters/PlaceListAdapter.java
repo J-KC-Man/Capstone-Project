@@ -65,6 +65,14 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
         }
     }
 
+    /*
+    * Used to get correct place in the list in PlacesFragment
+    * when swiped when deleting a place
+    * */
+    public Place getPlaceAtPosition (int position) {
+        return mPlaces.get(position);
+    }
+
     class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView placeItemTextView;
 

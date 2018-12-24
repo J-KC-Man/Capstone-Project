@@ -24,8 +24,8 @@ public interface PlaceDao {
     @Query("Delete FROM places_table")
     void deleteAll();
 
-    @Query("DELETE FROM places_table WHERE city_id=:cityId ")
-    void deletePlace(String cityId);
+    @Delete
+    void deletePlace(Place place);
 
     @Query("SELECT * from places_table")
     LiveData<List<Place>> getAllPlaces();

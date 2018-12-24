@@ -59,6 +59,15 @@ public class PlacesViewModel extends AndroidViewModel implements IAsyncTaskCallb
         return mPlaceById;
     }
 
+    public LiveData<Place> getDefaultPlace() {
+        return mRepository.getDefaultPlace();
+    }
+
+    /*
+    * delete place
+    * */
+    public void deletePlace(Place place) {mRepository.deletePlace(place);}
+
     /*
     * entry point to invoking AsyncTask
     * */

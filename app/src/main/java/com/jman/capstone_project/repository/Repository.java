@@ -55,7 +55,7 @@ public class Repository {
     /*
     * Get default weather
     * */
-    public LiveData<Place> getWeather() {
+    public LiveData<Place> getDefaultPlace() {
         this.mDefaultWeatherInfo = mPlaceDao.getDefaultPlace();
 
         return this.mDefaultWeatherInfo;
@@ -71,22 +71,22 @@ public class Repository {
         return this.mWeatherInfoForCity;
     }
 
-    public void insert (Place place) {
-        new insertAsyncTask(mPlaceDao).execute(place);
+    public void deletePlace (Place place) {
+        new deletePlaceAsyncTask(mPlaceDao).execute(place);
     }
 
     // create AsyncTask as you cannot do Room database operations on the UI thread
-    private static class insertAsyncTask extends AsyncTask<Place, Void, Void> {
+    private static class deletePlaceAsyncTask extends AsyncTask<Place, Void, Void> {
 
         private PlaceDao mAsyncTaskDao;
 
-        insertAsyncTask(PlaceDao dao) {
+        deletePlaceAsyncTask(PlaceDao dao) {
             mAsyncTaskDao = dao;
         }
 
         @Override
         protected Void doInBackground(final Place... params) {
-            mAsyncTaskDao.insert(params[0]);
+            mAsyncTaskDao.deletePlace(params[0]);
             return null;
         }
     }

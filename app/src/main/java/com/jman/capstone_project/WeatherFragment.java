@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,6 +38,8 @@ public class WeatherFragment extends Fragment {
     TextView cityNameTextView;
     TextView temperatureTextView;
     TextView weatherDescriptionTextView;
+    FloatingActionButton removePlacefloatingActionButton;
+    TextView floatingActionButtonHint;
 
     private Bundle bundle;
 
@@ -63,8 +66,6 @@ public class WeatherFragment extends Fragment {
         cityNameTextView = rootView.findViewById(R.id.city_name_textView);
         temperatureTextView = rootView.findViewById(R.id.temperature_textView);
         weatherDescriptionTextView = rootView.findViewById(R.id.description_textView);
-
-
 
         return rootView;
     }
@@ -107,22 +108,41 @@ public class WeatherFragment extends Fragment {
 
         bundle = getArguments();
         if(bundle == null) {
-            // If the user searched the location
-            placesViewModel.getPlaceById(placesViewModel.getCityId().getValue()).observe(getViewLifecycleOwner(), new Observer<Place>() {
-                @Override
-                public void onChanged(@Nullable Place place) {
-                    if (place == null) {
-                        return;
-                    }
-                    cityNameTextView.setText(place.getCityName() + ", " + place.getCountry());
-                    temperatureTextView.setText(place.getTemperature());
-                    weatherDescriptionTextView.setText(place.getWeatherDescription());
 
-                    // for widget
-                    setRecipeWidgetIngredientsList(place.getCityName(), place.getTemperature(), place.getWeatherDescription());
-                }
-            });
-        } else { // if the user clicked on one of their saved places
+            // if there are no places
+            if(placesViewModel.getAllPlaces().getValue() == null) {
+                cityNameTextView.setText("Get started by clicking Search!");
+            }
+            // get default place
+            if(placesViewModel.getCityId().getValue() == null) {
+                placesViewModel.getDefaultPlace().observe(getViewLifecycleOwner(), new Observer<Place>() {
+                    @Override
+                    public void onChanged(@Nullable Place place) {
+                        if (place == null) {
+                            return;
+                        }
+                        cityNameTextView.setText(place.getCityName() + ", " + place.getCountry());
+                        temperatureTextView.setText(place.getTemperature());
+                        weatherDescriptionTextView.setText(place.getWeatherDescription());
+                    }
+                });
+            } else { // If the user searched the location
+                placesViewModel.getPlaceById(placesViewModel.getCityId().getValue()).observe(getViewLifecycleOwner(), new Observer<Place>() {
+                    @Override
+                    public void onChanged(@Nullable Place place) {
+                        if (place == null) {
+                            return;
+                        }
+                        cityNameTextView.setText(place.getCityName() + ", " + place.getCountry());
+                        temperatureTextView.setText(place.getTemperature());
+                        weatherDescriptionTextView.setText(place.getWeatherDescription());
+
+                        // for widget
+                        setRecipeWidgetIngredientsList(place.getCityName(), place.getTemperature(), place.getWeatherDescription());
+                    }
+                });
+            }
+        } else { // else if the user clicked on one of their saved places
             String cityName = bundle.getString("cityName");
             String country = bundle.getString("country");
             String temperature = bundle.getString("temperature");

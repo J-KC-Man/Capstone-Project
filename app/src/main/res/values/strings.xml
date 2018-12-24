@@ -19,4 +19,7 @@
     <!--Admob-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
+    <!--Weather Fragment-->
+    <string name="remove_place_textview_title">Remove place</string>
+
 </resources>

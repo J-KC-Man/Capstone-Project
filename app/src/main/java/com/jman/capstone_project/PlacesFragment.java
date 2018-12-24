@@ -8,9 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.jman.capstone_project.adapters.PlaceListAdapter;
 import com.jman.capstone_project.database.entities.Place;
@@ -32,6 +34,12 @@ public class PlacesFragment extends Fragment implements IViewModelCallback {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -47,6 +55,33 @@ public class PlacesFragment extends Fragment implements IViewModelCallback {
 
         // attach recyclerView and adapter
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Add the functionality to swipe items in the
+        // recycler view to delete that item
+        ItemTouchHelper helper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0,
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView,
+                                          RecyclerView.ViewHolder viewHolder,
+                                          RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
+                                         int direction) {
+                        int position = viewHolder.getAdapterPosition();
+                        Place place= mAdapter.getPlaceAtPosition(position);
+                        Toast.makeText(getContext(), "Deleting " +
+                                place.getCityName(), Toast.LENGTH_LONG).show();
+
+                        // Delete the word
+                        mPlacesViewModel.deletePlace(place);
+                    }
+                });
+
+        helper.attachToRecyclerView(recyclerView);
 
         mPlacesViewModel = ViewModelProviders.of(this).get(PlacesViewModel.class);
 
