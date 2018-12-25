@@ -15,6 +15,8 @@
     <string name="search_invalid_text">Not a valid place</string>
     <string name="search_success_text">Press Home to see weather</string>
     <string name="missing_google_play_services_msg">Google Play Services is required to use location search</string>
+        <!--Search Fragment content descriptions-->
+        <string name="location_imageview_content_description">Location Icon</string>
 
     <!--Admob-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>

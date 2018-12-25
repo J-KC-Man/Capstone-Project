@@ -63,6 +63,7 @@
         android:layout_marginTop="76dp"
         android:layout_marginEnd="8dp"
         android:src="@drawable/ic_place_black_24dp"
+        android:contentDescription="@string/location_imageview_content_description"
         app:layout_constraintEnd_toStartOf="@+id/use_location_textView"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
