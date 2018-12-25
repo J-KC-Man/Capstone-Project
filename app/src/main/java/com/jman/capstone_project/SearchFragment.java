@@ -72,12 +72,6 @@ public class SearchFragment extends Fragment {
     }
 
     private PlacesViewModel placesViewModel;
-    LiveData<String> cityId;
-
-//    EditText searchEditText;
-//    Button searchButton;
-//    TextView resultMessageTextView;
-//    TextView searchByLocationTextView;
 
     @Nullable
     @BindView(R2.id.search_editText) EditText searchEditText;
@@ -120,14 +114,6 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-//        searchEditText = rootView.findViewById(R.id.search_editText);
-//        searchButton = rootView.findViewById(R.id.search_button);
-//        resultMessageTextView = rootView.findViewById(R.id.error_message_textView);
-//        searchByLocationTextView = rootView.findViewById(R.id.use_location_textView);
-
-//        if (savedInstanceState != null) {
-//            resultMessageTextView.setText(savedInstanceState.getString("result"));
-//        }
 
         AdView mAdView = rootView.findViewById(R.id.adView);
         // Create an ad request. Check logcat output for the hashed device ID to
@@ -183,6 +169,7 @@ public class SearchFragment extends Fragment {
         if (savedInstanceState != null) {
             String s = savedInstanceState.getString("result");
             resultMessageTextView.setText(s);
+            Toast.makeText(getContext(), "Saved value: " + s, Toast.LENGTH_LONG).show();
         }
         return rootView;
     }
@@ -195,7 +182,7 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-//        outState.putString("result",resultMessageTextView.getText().toString());
+   //     outState.putString("result",resultMessageTextView.getText().toString());
         super.onSaveInstanceState(outState);
     }
 
@@ -247,9 +234,7 @@ public class SearchFragment extends Fragment {
                 }
                 // user chooses not to grant permissions
                 else {
-                    Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-
-                    // set text in my app to say that location features are disabled, click again to enable
+                    Toast.makeText(getContext(), R.string.grant_location_permission_denied, Toast.LENGTH_SHORT).show();
                 }
                 break;
             }
@@ -272,7 +257,7 @@ public class SearchFragment extends Fragment {
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                 } catch (Exception e) {
-                    Toast.makeText(getActivity(), "Keyboard already hidden", Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(), R.string.keyboard_already_hidden, Toast.LENGTH_SHORT);
                 }
 
                 String searchTerm = searchEditText.getText().toString();
@@ -332,7 +317,7 @@ public class SearchFragment extends Fragment {
         if(!callback.isOnline()) {
             Toast.makeText(
                     getContext(),
-                    "No internet connection",
+                    R.string.no_internet_connection,
                     Toast.LENGTH_LONG).show();
             throw new TimeoutException("Connect timeout: no network connection");
         }

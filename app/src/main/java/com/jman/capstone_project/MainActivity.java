@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity
     private final String SEARCH_FRAGMENT_TAG = "searchfragmenttag";
 
     private String currentFragmentTag;
-    //        instantiate fragment
+
     Fragment fragment = null;
 
     BottomNavigationView navigation;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
 
         // init asynctask object and make the MainActivity the callback calling object
         //new EndpointAsyncTask(this).execute("London, UK");
-        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+        MobileAds.initialize(this, String.valueOf(R.string.mobile_ads_init));
 
         if(savedInstanceState == null){ // nothing was saved
             // first time loading up app, default fragment
@@ -54,17 +54,18 @@ public class MainActivity extends AppCompatActivity
             switch (currentFragmentTag) {
                 case PLACES_FRAGMENT_TAG:
                     fragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
-                    loadFragment(fragment, currentFragmentTag);
                     break;
                 case SEARCH_FRAGMENT_TAG:
                     fragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
-                    loadFragment(fragment, currentFragmentTag);
+                    if(fragment == null) {
+                        fragment = new SearchFragment();
+                    }
                     break;
                 case WEATHER_FRAGMENT_TAG:
                     fragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
-                    loadFragment(fragment, currentFragmentTag);
                     break;
             }
+            loadFragment(fragment, currentFragmentTag);
         }
     }
 

@@ -18,8 +18,13 @@
 
     <!--Admob-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="mobile_ads_init">ca-app-pub-3940256099942544~3347511713</string>
 
     <!--Weather Fragment-->
     <string name="remove_place_textview_title">Remove place</string>
+    <string name="get_started_text">Get started by clicking Search!</string>
+    <string name="grant_location_permission_denied">Permission denied</string>
+    <string name="keyboard_already_hidden">Keyboard already hidden</string>
+    <string name="no_internet_connection">No internet connection</string>
 
 </resources>

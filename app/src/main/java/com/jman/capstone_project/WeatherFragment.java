@@ -38,8 +38,6 @@ public class WeatherFragment extends Fragment {
     TextView cityNameTextView;
     TextView temperatureTextView;
     TextView weatherDescriptionTextView;
-    FloatingActionButton removePlacefloatingActionButton;
-    TextView floatingActionButtonHint;
 
     private Bundle bundle;
 
@@ -111,7 +109,7 @@ public class WeatherFragment extends Fragment {
 
             // if there are no places
             if(placesViewModel.getAllPlaces().getValue() == null) {
-                cityNameTextView.setText("Get started by clicking Search!");
+                cityNameTextView.setText(R.string.get_started_text);
             }
             // get default place
             if(placesViewModel.getCityId().getValue() == null) {
