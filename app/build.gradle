@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.jakewharton.butterknife'
 
 android {
     signingConfigs {
@@ -63,6 +62,6 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
 
     //Butterknife
-    implementation 'com.jakewharton:butterknife:9.0.0-rc3'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc3'
+    implementation 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }

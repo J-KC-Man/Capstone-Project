@@ -74,13 +74,13 @@ public class SearchFragment extends Fragment {
     private PlacesViewModel placesViewModel;
 
     @Nullable
-    @BindView(R2.id.search_editText) EditText searchEditText;
+    @BindView(R.id.search_editText) EditText searchEditText;
     @Nullable
-    @BindView(R2.id.search_button) Button searchButton;
+    @BindView(R.id.search_button) Button searchButton;
     @Nullable
-    @BindView(R2.id.error_message_textView) TextView resultMessageTextView;
+    @BindView(R.id.error_message_textView) TextView resultMessageTextView;
     @Nullable
-    @BindView(R2.id.use_location_textView) TextView searchByLocationTextView;
+    @BindView(R.id.use_location_textView) TextView searchByLocationTextView;
 
     private Unbinder unbinder;
 
@@ -169,7 +169,7 @@ public class SearchFragment extends Fragment {
         if (savedInstanceState != null) {
             String s = savedInstanceState.getString("result");
             resultMessageTextView.setText(s);
-            Toast.makeText(getContext(), "Saved value: " + s, Toast.LENGTH_LONG).show();
+           // Toast.makeText(getContext(), "Saved value: " + s, Toast.LENGTH_LONG).show();
         }
         return rootView;
     }
