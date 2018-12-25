@@ -9,10 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jman.capstone_project.R;
+import com.jman.capstone_project.R2;
 import com.jman.capstone_project.database.entities.Place;
 import com.jman.capstone_project.viewmodel.IViewModelCallback;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.PlaceViewHolder> {
 
@@ -74,12 +78,11 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.Plac
     }
 
     class PlaceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private final TextView placeItemTextView;
+       @BindView(R2.id.place_list_item_textView) TextView placeItemTextView;
 
         private PlaceViewHolder(View itemView) {
             super(itemView);
-            placeItemTextView = itemView.findViewById(R.id.place_list_item_textView);
-
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(PlaceViewHolder.this);
         }
 
