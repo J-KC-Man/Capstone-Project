@@ -48,6 +48,10 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 
 public class SearchFragment extends Fragment {
 
@@ -70,10 +74,21 @@ public class SearchFragment extends Fragment {
     private PlacesViewModel placesViewModel;
     LiveData<String> cityId;
 
-    EditText searchEditText;
-    Button searchButton;
-    TextView resultMessageTextView;
-    TextView searchByLocationTextView;
+//    EditText searchEditText;
+//    Button searchButton;
+//    TextView resultMessageTextView;
+//    TextView searchByLocationTextView;
+
+    @Nullable
+    @BindView(R2.id.search_editText) EditText searchEditText;
+    @Nullable
+    @BindView(R2.id.search_button) Button searchButton;
+    @Nullable
+    @BindView(R2.id.error_message_textView) TextView resultMessageTextView;
+    @Nullable
+    @BindView(R2.id.use_location_textView) TextView searchByLocationTextView;
+
+    private Unbinder unbinder;
 
     /* FusedLocationProvider api*/
     private FusedLocationProviderClient mFusedLocationClient;
@@ -104,11 +119,11 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
-
-        searchEditText = rootView.findViewById(R.id.search_editText);
-        searchButton = rootView.findViewById(R.id.search_button);
-        resultMessageTextView = rootView.findViewById(R.id.error_message_textView);
-        searchByLocationTextView = rootView.findViewById(R.id.use_location_textView);
+        unbinder = ButterKnife.bind(this, rootView);
+//        searchEditText = rootView.findViewById(R.id.search_editText);
+//        searchButton = rootView.findViewById(R.id.search_button);
+//        resultMessageTextView = rootView.findViewById(R.id.error_message_textView);
+//        searchByLocationTextView = rootView.findViewById(R.id.use_location_textView);
 
 //        if (savedInstanceState != null) {
 //            resultMessageTextView.setText(savedInstanceState.getString("result"));
@@ -173,8 +188,14 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString("result",resultMessageTextView.getText().toString());
+//        outState.putString("result",resultMessageTextView.getText().toString());
         super.onSaveInstanceState(outState);
     }
 
