@@ -1,27 +1,20 @@
 package com.jman.capstone_project;
 
-
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.jman.capstone_project.database.entities.Place;
 import com.jman.capstone_project.viewmodel.PlacesViewModel;
 import com.jman.capstone_project.widget.WeatherWidgetIntentService;
-
-import java.util.List;
 
 import static com.jman.capstone_project.global.Constants.DESCRIPTION_DEFAULT_SHARED_PREF;
 import static com.jman.capstone_project.global.Constants.PLACE_NAME_DEFAULT_SHARED_PREF;
@@ -43,16 +36,6 @@ public class WeatherFragment extends Fragment {
 
     public WeatherFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Use ViewModelProviders to associate the ViewModel with the UI controller
-        // this is the fragment, it serves as a view controller
-        // When the activity is destroyed, for example through a configuration change, the ViewModel persists.
-        // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
-
     }
 
     @Override
@@ -92,17 +75,6 @@ public class WeatherFragment extends Fragment {
         // When the activity is destroyed, for example through a configuration change, the ViewModel persists.
         // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
         placesViewModel = ViewModelProviders.of(getActivity()).get(PlacesViewModel.class);
-
-//        placesViewModel.getPosition().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-////            @Override
-////            public void onChanged(@Nullable Integer integer) {
-////                if(integer == null) {
-////                    return;
-////                }
-////               Place place = placesViewModel.getAllPlaces().getValue().get(integer.intValue());
-////
-////            }
-////        });
 
         bundle = getArguments();
         if(bundle == null) {
@@ -156,24 +128,6 @@ public class WeatherFragment extends Fragment {
         /* Update the widget with the place */
         WeatherWidgetIntentService.startActionUpdateWidget(getContext());
 
-        /*
-        * Show default place - the first place in the table if there are records in table
-        * */
-
-//        placesViewModel.getCityId().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String cityId) {
-//                if(cityId == null) {
-//                    return;
-//                }
-//                // get the record from the db
-//                Log.d("Get the cityId", "CityId is " + cityId);
-//               // cityNameTextView.setText(cityId);
-//               // placesViewModel.getPlaceById(cityId);
-//            //    cityNameTextView.setText(placesViewModel.getPlaceById(cityId).getValue().getCityName());
-//
-//            }
-//        });
     }
 
 //    public void bindData(Place place) {

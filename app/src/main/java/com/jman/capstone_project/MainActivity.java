@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
 
     private boolean loadFragment(Fragment fragment, String tag) {
 
-        if(fragment != null) {
+        if(fragment != null && !fragment.isInLayout()) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment, tag)
