@@ -110,7 +110,7 @@ public class SearchFragment extends Fragment {
 
         if (savedInstanceState != null) {
             result = savedInstanceState.getString("result");
-            Toast.makeText(getContext(), "Saved value: " + result, Toast.LENGTH_LONG).show();
+           // Toast.makeText(getContext(), "Saved value: " + result, Toast.LENGTH_LONG).show();
         }
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
