@@ -3,7 +3,7 @@ Capstone project for the Udacity Nanodegree course 2017/2018
 
 Weather is an Android App that allows users to view and save worldwide weather information by text search or GPS location. 
 
-## Technologies implemented:
+## Technologies implemented
 
 Android Architecture Components: Room, Viewmodel and Livedata
 Butterknife library
