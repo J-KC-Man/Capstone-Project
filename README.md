@@ -5,11 +5,12 @@ Weather is an Android App that allows users to view and save worldwide weather i
 
 ## Technologies implemented
 
-Android Architecture Components: Room, Viewmodel and Livedata
-Butterknife library
-OpenWeatherMap api
-FusedLocationProvider API
-Admob
+- Android Architecture Components: Room, Viewmodel and Livedata
+- Butterknife library
+- OpenWeatherMap api
+- FusedLocationProvider API
+- Admob
+- Fragments
 
 ## Usage
 
