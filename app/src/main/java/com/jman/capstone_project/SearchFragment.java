@@ -2,22 +2,18 @@ package com.jman.capstone_project;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +33,7 @@ import com.jman.capstone_project.viewmodel.PlacesViewModel;
 
 import java.util.concurrent.TimeoutException;
 
-import static android.support.v4.content.ContextCompat.checkSelfPermission;
+import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 import static com.jman.capstone_project.global.Constants.BASE_URL_LOCATION_SEARCH;
 import static com.jman.capstone_project.global.Constants.BASE_URL_LOCATION_SEARCH_LON;
@@ -74,13 +70,13 @@ public class SearchFragment extends Fragment {
     private PlacesViewModel placesViewModel;
 
     @Nullable
-    @BindView(R2.id.search_editText) EditText searchEditText;
+    @BindView(R.id.search_editText) EditText searchEditText;
     @Nullable
-    @BindView(R2.id.search_button) Button searchButton;
+    @BindView(R.id.search_button) Button searchButton;
     @Nullable
-    @BindView(R2.id.error_message_textView) TextView resultMessageTextView;
+    @BindView(R.id.error_message_textView) TextView resultMessageTextView;
     @Nullable
-    @BindView(R2.id.use_location_textView) TextView searchByLocationTextView;
+    @BindView(R.id.use_location_textView) TextView searchByLocationTextView;
 
     private Unbinder unbinder;
 

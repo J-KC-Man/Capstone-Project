@@ -1,19 +1,16 @@
 package com.jman.capstone_project.repository;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
-import com.jman.capstone_project.BuildConfig;
 import com.jman.capstone_project.database.PlacesRoomDatabase;
 import com.jman.capstone_project.database.dao.PlaceDao;
 
 import com.jman.capstone_project.database.entities.Place;
 
-
-import com.jman.capstone_project.remoteDataSource.EndpointAsyncTask;
 import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
 import com.jman.capstone_project.remoteDataSource.models.WeatherInfoModel;
 
@@ -28,11 +25,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
+
 import java.util.List;
 
 import static com.jman.capstone_project.global.Constants.API_KEY;
-import static com.jman.capstone_project.global.Constants.BASE_URL_TEXT_SEARCH;
 
 public class Repository {
 

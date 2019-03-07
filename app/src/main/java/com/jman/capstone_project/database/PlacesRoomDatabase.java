@@ -1,19 +1,19 @@
 package com.jman.capstone_project.database;
 
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.jman.capstone_project.database.dao.PlaceDao;
 import com.jman.capstone_project.database.entities.Place;
 
 
-@Database(entities = {Place.class}, version = 6, exportSchema = false)
+@Database(entities = {Place.class}, version = 7, exportSchema = false)
 public abstract class PlacesRoomDatabase extends RoomDatabase {
 
     // Define the DAOs that work with the database

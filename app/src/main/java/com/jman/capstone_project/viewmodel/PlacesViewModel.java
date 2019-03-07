@@ -1,16 +1,13 @@
 package com.jman.capstone_project.viewmodel;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
-
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.annotation.NonNull;
 import com.jman.capstone_project.database.entities.Place;
 import com.jman.capstone_project.remoteDataSource.IAsyncTaskCallback;
 import com.jman.capstone_project.repository.Repository;
-
-import java.net.URL;
 import java.util.List;
 
 public class PlacesViewModel extends AndroidViewModel implements IAsyncTaskCallback {
