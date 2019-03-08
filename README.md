@@ -1,13 +1,18 @@
-# Capstone-Project
+# Weather
 Capstone project for the Udacity Nanodegree course 2017/2018
 
-This is a Weather App that uses
+Weather is an Android App that allows users to view and save worldwide weather information by text search or GPS location. 
 
-Android Architecture Components, Room, Viewmodel and Livedata
-Butterknife library
-OpenWeatherMap api
-FusedLocationProvider API
-Admob
+## Technologies implemented
+
+- Android Architecture Components: Room, Viewmodel and Livedata
+- Butterknife library
+- OpenWeatherMap api
+- FusedLocationProvider API
+- Admob
+- Fragments
+
+## Usage
 
 This app utilises OpenWeatherMap api. To obtain an api key, navigate to https://openweathermap.org/appid and sign up to generate a new key.
 

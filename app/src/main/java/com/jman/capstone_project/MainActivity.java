@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity
 
     private boolean loadFragment(Fragment fragment, String tag) {
 
-        if(fragment != null) {
+        if(fragment != null && !fragment.isInLayout()) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment, tag)

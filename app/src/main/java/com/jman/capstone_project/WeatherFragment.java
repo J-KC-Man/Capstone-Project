@@ -40,16 +40,6 @@ public class WeatherFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Use ViewModelProviders to associate the ViewModel with the UI controller
-        // this is the fragment, it serves as a view controller
-        // When the activity is destroyed, for example through a configuration change, the ViewModel persists.
-        // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -86,17 +76,6 @@ public class WeatherFragment extends Fragment {
         // When the activity is destroyed, for example through a configuration change, the ViewModel persists.
         // When the activity is re-created, the ViewModelProviders return the existing ViewModel.
         placesViewModel = ViewModelProviders.of(getActivity()).get(PlacesViewModel.class);
-
-//        placesViewModel.getPosition().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-////            @Override
-////            public void onChanged(@Nullable Integer integer) {
-////                if(integer == null) {
-////                    return;
-////                }
-////               Place place = placesViewModel.getAllPlaces().getValue().get(integer.intValue());
-////
-////            }
-////        });
 
         bundle = getArguments();
         if(bundle == null) {
@@ -150,24 +129,6 @@ public class WeatherFragment extends Fragment {
         /* Update the widget with the place */
         WeatherWidgetIntentService.startActionUpdateWidget(getContext());
 
-        /*
-        * Show default place - the first place in the table if there are records in table
-        * */
-
-//        placesViewModel.getCityId().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String cityId) {
-//                if(cityId == null) {
-//                    return;
-//                }
-//                // get the record from the db
-//                Log.d("Get the cityId", "CityId is " + cityId);
-//               // cityNameTextView.setText(cityId);
-//               // placesViewModel.getPlaceById(cityId);
-//            //    cityNameTextView.setText(placesViewModel.getPlaceById(cityId).getValue().getCityName());
-//
-//            }
-//        });
     }
 
 //    public void bindData(Place place) {

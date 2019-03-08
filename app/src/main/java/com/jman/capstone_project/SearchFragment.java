@@ -91,6 +91,7 @@ public class SearchFragment extends Fragment {
     private LocationCallback locationCallback;
     private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
 
+    String result;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -99,7 +100,14 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+
+        Log.i("SearchFragment", "onCreate. Saved state? "
+                + (savedInstanceState != null));
+
+        if (savedInstanceState != null) {
+            result = savedInstanceState.getString("result");
+           // Toast.makeText(getContext(), "Saved value: " + result, Toast.LENGTH_LONG).show();
+        }
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
     }
@@ -107,6 +115,9 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Log.i("SearchFragment", "onCreateView. Saved state? "
+                + (savedInstanceState != null));
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         unbinder = ButterKnife.bind(this, rootView);
@@ -162,10 +173,9 @@ public class SearchFragment extends Fragment {
         });
 
         // restore result text if device was rotated after a search was done
-        if (savedInstanceState != null) {
-            String s = savedInstanceState.getString("result");
-            resultMessageTextView.setText(s);
-            Toast.makeText(getContext(), "Saved value: " + s, Toast.LENGTH_LONG).show();
+        if (result != null) {
+            resultMessageTextView.setText(result);
+            resultMessageTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         }
         return rootView;
     }
@@ -178,7 +188,9 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-   //     outState.putString("result",resultMessageTextView.getText().toString());
+        if(resultMessageTextView != null) {
+            outState.putString("result",resultMessageTextView.getText().toString());
+        }
         super.onSaveInstanceState(outState);
     }
 
