@@ -21,6 +21,9 @@ import static com.jman.capstone_project.global.Constants.DESCRIPTION_DEFAULT_SHA
 import static com.jman.capstone_project.global.Constants.PLACE_NAME_DEFAULT_SHARED_PREF;
 import static com.jman.capstone_project.global.Constants.TEMPERATURE_DEFAULT_SHARED_PREF;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,9 +32,14 @@ public class WeatherFragment extends Fragment {
 
     private PlacesViewModel placesViewModel;
 
-    TextView cityNameTextView;
-    TextView temperatureTextView;
-    TextView weatherDescriptionTextView;
+    private Unbinder unbinder;
+
+    @Nullable
+    @BindView(R.id.city_name_textView) TextView cityNameTextView;
+    @Nullable
+    @BindView(R.id.temperature_textView) TextView temperatureTextView;
+    @Nullable
+    @BindView(R.id.description_textView) TextView weatherDescriptionTextView;
 
     private Bundle bundle;
 
@@ -45,9 +53,8 @@ public class WeatherFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_weather, container, false);
 
-        cityNameTextView = rootView.findViewById(R.id.city_name_textView);
-        temperatureTextView = rootView.findViewById(R.id.temperature_textView);
-        weatherDescriptionTextView = rootView.findViewById(R.id.description_textView);
+        unbinder = ButterKnife.bind(this, rootView);
+
 
         return rootView;
     }
@@ -129,6 +136,12 @@ public class WeatherFragment extends Fragment {
         /* Update the widget with the place */
         WeatherWidgetIntentService.startActionUpdateWidget(getContext());
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
 //    public void bindData(Place place) {

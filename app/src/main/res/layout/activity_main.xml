@@ -7,15 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        app:titleTextColor="@color/colorWhite"
         android:theme="@style/AppTheme"
-        app:popupTheme="@style/AppTheme"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/AppTheme"
+        app:titleTextColor="@color/colorWhite" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
